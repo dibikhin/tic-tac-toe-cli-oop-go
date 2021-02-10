@@ -1,3 +1,4 @@
+// Tic Tac Toe inspired by 'A Tour of Go'
 package main
 
 import (
@@ -7,27 +8,31 @@ import (
 	"strings"
 )
 
+type board [][]string
+
+var logo = board{
+	{"X", " ", "X"},
+	{"O", "X", "O"},
+	{"X", " ", "O"},
+}
+
+var empty = board{
+	{"_", "_", "_"},
+	{"_", "_", "_"},
+	{"_", "_", "_"},
+}
+
 func main() {
-	fmt.Println("Hey! This is Tic Tac Toe :)")
-	fmt.Println()
+	fmt.Println("Hey! This is PvP Tic Tac Toe :)")
+	printBoard(logo)
 
-	logo := [][]string{
-		{"X", " ", "X"},
-		{"O", "X", "O"},
-		{"X", " ", "O"},
-	}
-	for _, r := range logo {
-		fmt.Printf("%s\n", strings.Join(r, " "))
-	}
-	fmt.Println()
-
+	// Setting up
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	player1 := scanner.Text()
-
-	fmt.Println("Player 1 is:", strings.ToUpper(player1))
+	fmt.Println()
 
 	var player2 string
 	if player1 == "x" {
@@ -35,51 +40,41 @@ func main() {
 	} else {
 		player2 = "x"
 	}
+	fmt.Println("Player 1 is:", strings.ToUpper(player1))
 	fmt.Println("Player 2 is:", strings.ToUpper(player2))
 
-	fmt.Println("Press from 1 to 9 to put your mark (e.g. 5 is center).")
+	// Game loop
+	for {
+		fmt.Println()
+		fmt.Println("Press 1 to 9 to mark, then press ENTER (e.g. 5 is center). Board:")
 
-	board := [][]string{
-		{"_", "_", "_"},
-		{"_", "_", "_"},
-		{"_", "_", "_"},
+		printBoard(empty)
+		fmt.Print("Player 1, your turn: ")
+
+		board := make(board, len(empty))
+		copy(board, empty)
+
+		scanner.Scan()
+		p1turn := scanner.Text()
+		if p1turn != "" {
+			board[1][1] = "X"
+			printBoard(board)
+		}
+		fmt.Print("Player 2, your turn: ")
+
+		scanner.Scan()
+		p2turn := scanner.Text()
+		if p2turn != "" {
+			board[2][2] = "O"
+			printBoard(board)
+		}
 	}
-	for _, r := range board {
+}
+
+func printBoard(b board) {
+	fmt.Println()
+	for _, r := range b {
 		fmt.Printf("%s\n", strings.Join(r, " "))
 	}
 	fmt.Println()
-	fmt.Print("Player 1, your turn: ")
-
-	scanner.Scan()
-	p1turn := scanner.Text()
-	if p1turn != "" {
-		board[1][1] = "X"
-
-		fmt.Println()
-		for _, r := range board {
-			fmt.Printf("%s\n", strings.Join(r, " "))
-		}
-	}
-	fmt.Println()
-	fmt.Print("Player 2, your turn: ")
-
-	scanner.Scan()
-	p2turn := scanner.Text()
-	if p2turn != "" {
-		board[2][2] = "O"
-
-		fmt.Println()
-		for _, r := range board {
-			fmt.Printf("%s\n", strings.Join(r, " "))
-		}
-	}
-	fmt.Println()
-
-	// for {
-	// 	fmt.Print("Enter text: ")
-	// 	scanner := bufio.NewScanner(os.Stdin)
-	// 	scanner.Scan()
-	// 	text := scanner.Text()
-	// 	fmt.Println(text)
-	// }
 }
