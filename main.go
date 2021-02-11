@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type grid [][]string
+type grid [3][3]string
 
 func (b grid) isEmpty(row, col int) bool {
 	v := b[row][col]
@@ -24,6 +24,26 @@ func (b grid) hasEmpty() bool {
 		}
 	}
 	return false
+}
+
+func (b grid) isWinner(p string) bool {
+	// Need something better, too naive
+
+	// Horizontal
+	x0 := b[0][0] == p && b[0][1] == p && b[0][2] == p
+	x1 := b[1][0] == p && b[1][1] == p && b[1][2] == p
+	x2 := b[2][0] == p && b[2][1] == p && b[2][2] == p
+
+	// Vertical
+	x3 := b[0][0] == p && b[1][0] == p && b[2][0] == p
+	x4 := b[0][1] == p && b[1][1] == p && b[2][1] == p
+	x5 := b[0][2] == p && b[1][2] == p && b[2][2] == p
+
+	// Diagonal
+	x6 := b[0][0] == p && b[1][1] == p && b[2][2] == p
+	x7 := b[0][2] == p && b[1][1] == p && b[2][0] == p
+
+	return x0 || x1 || x2 || x3 || x4 || x5 || x6 || x7
 }
 
 var logo = grid{
@@ -68,51 +88,65 @@ func main() {
 		var row, col int
 
 		if !board.hasEmpty() {
-			break
+			fmt.Println("Draw!")
+			return
 		}
-		fmt.Print("Player 1 0, your turn: ")
+		fmt.Printf("Player 1 (%v), your turn: ", player1)
 		p1turn := getInput(scanner)
 		for {
 			if !isKey(p1turn) {
 				print(board)
-				fmt.Print("Player 1 1, your turn: ")
+				fmt.Printf("Player 1 (%v), your turn: ", player1)
 				p1turn = getInput(scanner)
 				continue
 			}
 			row, col = pos(p1turn)
 			if !board.isEmpty(row, col) {
 				print(board)
-				fmt.Print("Player 1 2, your turn: ")
+				fmt.Printf("Player 1 (%v), your turn: ", player1)
 				p1turn = getInput(scanner)
 				continue
 			}
 			break
 		}
 		board[row][col] = player1
+		if board.isWinner(player1) {
+			print(board)
+			fmt.Printf("Player 1 (%v) won!", player1)
+			fmt.Println()
+			return
+		}
 		print(board)
 
 		if !board.hasEmpty() {
-			break
+			fmt.Println("Draw!")
+			return
 		}
-		fmt.Print("Player 2, your turn: ")
+		fmt.Printf("Player 2 (%v), your turn: ", player2)
 		p2turn := getInput(scanner)
 		for {
 			if !isKey(p2turn) {
 				print(board)
-				fmt.Print("Player 2, your turn: ")
+				fmt.Printf("Player 2 (%v), your turn: ", player2)
 				p2turn = getInput(scanner)
 				continue
 			}
 			row, col = pos(p2turn)
 			if !board.isEmpty(row, col) {
 				print(board)
-				fmt.Print("Player 2, your turn: ")
+				fmt.Printf("Player 2 (%v), your turn: ", player2)
 				p2turn = getInput(scanner)
 				continue
 			}
 			break
 		}
 		board[row][col] = player2
+		if board.isWinner(player2) {
+			print(board)
+			fmt.Printf("Player 2 (%v) won!", player2)
+			fmt.Println()
+			return
+		}
 		print(board)
 	}
 }
@@ -136,7 +170,7 @@ func printLogo() {
 func _print(b grid) {
 	fmt.Println()
 	for _, r := range b {
-		fmt.Printf("%s\n", strings.Join(r, " "))
+		fmt.Printf("%s\n", strings.Join(r[:], " "))
 	}
 	fmt.Println()
 }
