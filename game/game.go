@@ -95,8 +95,8 @@ func PrintLogo() {
 func Setup() {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
-	p1 := read(scanner)
-	player1, player2 = arrange(p1)
+	mark1 := read(scanner)
+	player1, player2 = arrange(mark1)
 
 	fmt.Println()
 	fmt.Println("Player 1 is:", player1)
@@ -106,18 +106,18 @@ func Setup() {
 }
 
 func Loop() bool {
-	done := move(1, player1)
-	if done {
+	ok := move(1, player1)
+	if !ok {
 		return false
 	}
-	done = move(2, player2)
-	return !done
+	ok = move(2, player2)
+	return ok
 }
 
 func move(n int, player string) bool {
 	if !board.hasEmpty() {
 		fmt.Println("Draw!")
-		return true
+		return false
 	}
 	fmt.Printf("Player %v (%v), your turn: ", n, player)
 	turn := read(scanner)
@@ -146,21 +146,21 @@ func move(n int, player string) bool {
 	if board.isWinner(player) {
 		board.print()
 		fmt.Printf("Player %v (%v) won!\n", n, player)
-		return true
+		return false
 	}
 	board.print()
 
-	return false
+	return true
 }
 
 // Other
-func read(s *bufio.Scanner) string {
-	s.Scan()
-	return strings.TrimSpace(s.Text())
+func read(bs *bufio.Scanner) string {
+	bs.Scan()
+	return strings.TrimSpace(bs.Text())
 }
 
-func arrange(p string) (string, string) {
-	if strings.ToLower(p) == "x" {
+func arrange(m string) (string, string) {
+	if strings.ToLower(m) == "x" {
 		return "X", "O"
 	} else {
 		return "O", "X"
@@ -184,6 +184,6 @@ func pos(key string) (int, int) {
 		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
 		"7": {2, 0}, "8": {2, 1}, "9": {2, 2},
 	}
-	pos := m[key]
+	pos := m[key] // TODO: detect and propagate error
 	return pos.row, pos.col
 }
