@@ -8,7 +8,7 @@ import (
 
 // $ clear && go run main.go
 func main() {
-	fmt.Println("Hey! This is Tic Tac Toe for 2 friends :)")
+	fmt.Println("Hey! This is 3x3 Tic Tac Toe for 2 friends :)")
 
 	game.PrintLogo()
 	game.Setup()

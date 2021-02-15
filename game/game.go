@@ -4,63 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
-
-// Grid
-
-type grid [3][3]string
-
-func (b grid) isFilled(row, col int) bool {
-	v := b[row][col]
-	return v != "_"
-}
-
-func (b grid) hasEmpty() bool {
-	for _, r := range b {
-		for _, v := range r {
-			if v == "_" {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-func (b grid) isWinner(p string) bool {
-	// Something better needed, too naive
-
-	// Horizontal
-	x0 := b[0][0] == p && b[0][1] == p && b[0][2] == p
-	x1 := b[1][0] == p && b[1][1] == p && b[1][2] == p
-	x2 := b[2][0] == p && b[2][1] == p && b[2][2] == p
-
-	// Vertical
-	x3 := b[0][0] == p && b[1][0] == p && b[2][0] == p
-	x4 := b[0][1] == p && b[1][1] == p && b[2][1] == p
-	x5 := b[0][2] == p && b[1][2] == p && b[2][2] == p
-
-	// Diagonal
-	x6 := b[0][0] == p && b[1][1] == p && b[2][2] == p
-	x7 := b[0][2] == p && b[1][1] == p && b[2][0] == p
-
-	return x0 || x1 || x2 || x3 || x4 || x5 || x6 || x7
-}
-
-func (b grid) print() {
-	fmt.Println()
-	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
-
-	_print(b)
-}
-
-func _print(b grid) {
-	fmt.Println()
-	for _, r := range b {
-		fmt.Printf("%s\n", strings.Join(r[:], " "))
-	}
-	fmt.Println()
-}
 
 // Init
 
@@ -154,13 +100,14 @@ func move(n int, player string) bool {
 }
 
 // Other
+
 func read(bs *bufio.Scanner) string {
 	bs.Scan()
 	return strings.TrimSpace(bs.Text())
 }
 
-func arrange(m string) (string, string) {
-	if strings.ToLower(m) == "x" {
+func arrange(s string) (string, string) {
+	if strings.ToLower(s) == "x" {
 		return "X", "O"
 	} else {
 		return "O", "X"
@@ -168,12 +115,11 @@ func arrange(m string) (string, string) {
 }
 
 func isKey(s string) bool {
-	for _, v := range strings.Split("123456789", "") {
-		if s == v {
-			return true
-		}
+	k, err := strconv.Atoi(s)
+	if err != nil {
+		return false
 	}
-	return false
+	return k >= 1 && k <= 9
 }
 
 func pos(key string) (int, int) {
@@ -184,6 +130,6 @@ func pos(key string) (int, int) {
 		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
 		"7": {2, 0}, "8": {2, 1}, "9": {2, 2},
 	}
-	pos := m[key] // TODO: detect and propagate error
+	pos := m[key] // TODO: detect and propagate errors
 	return pos.row, pos.col
 }
