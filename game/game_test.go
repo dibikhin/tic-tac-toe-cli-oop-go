@@ -56,7 +56,7 @@ func Test_isKey(t *testing.T) {
 	}
 }
 
-func Test_pos(t *testing.T) {
+func Test_toCell(t *testing.T) {
 	tests := []struct {
 		name  string
 		arg   string
@@ -70,106 +70,12 @@ func Test_pos(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := pos(tt.arg)
-			if got != tt.want {
-				t.Errorf("pos() got = %v, want %v", got, tt.want)
+			c := toCell(tt.arg)
+			if c.row != tt.want {
+				t.Errorf("pos() got = %v, want %v", c.row, tt.want)
 			}
-			if got1 != tt.want1 {
-				t.Errorf("pos() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
-}
-
-func Test_grid_isFilled(t *testing.T) {
-	type args struct {
-		row int
-		col int
-	}
-	tests := []struct {
-		name string
-		b    grid
-		args args
-		want bool
-	}{
-		{"filled", grid{
-			{"X", "_", "X"},
-			{"O", "X", "O"},
-			{"X", "_", "O"},
-		}, args{0, 0}, true},
-		{"empty", grid{
-			{"X", "_", "X"},
-			{"O", "_", "O"},
-			{"X", "_", "O"},
-		}, args{0, 1}, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.b.isFilled(tt.args.row, tt.args.col); got != tt.want {
-				t.Errorf("grid.isFilled() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_grid_hasEmpty(t *testing.T) {
-	tests := []struct {
-		name string
-		b    grid
-		want bool
-	}{
-		{"has empty", grid{
-			{"X", "_", "X"},
-			{"O", "_", "O"},
-			{"X", "_", "O"},
-		}, true},
-		{"all filled", grid{
-			{"X", "O", "X"},
-			{"O", "X", "O"},
-			{"O", "X", "O"},
-		}, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.b.hasEmpty(); got != tt.want {
-				t.Errorf("grid.hasEmpty() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_grid_isWinner(t *testing.T) {
-	tests := []struct {
-		name string
-		b    grid
-		arg  string
-		want bool
-	}{
-		{"first row, X", grid{
-			{"X", "X", "X"},
-			{"O", "_", "_"},
-			{"O", "_", "_"},
-		}, "X", true},
-		{"last col, O", grid{
-			{"X", "X", "O"},
-			{"_", "_", "O"},
-			{"_", "_", "O"},
-		}, "O", true},
-		{"left diagonal, O", grid{
-			{"X", "X", "O"},
-			{"_", "O", "_"},
-			{"O", "_", "_"},
-		}, "O", true},
-		{"nobody", grid{
-			{"X", "O", "O"},
-			{"O", "X", "X"},
-			{"O", "X", "O"},
-		}, "O", false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.b.isWinner(tt.arg); got != tt.want {
-				t.Errorf("grid.isWinner() = %v, want %v", got, tt.want)
+			if c.col != tt.want1 {
+				t.Errorf("pos() got1 = %v, want %v", c.col, tt.want1)
 			}
 		})
 	}

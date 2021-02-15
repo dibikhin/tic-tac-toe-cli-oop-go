@@ -61,14 +61,11 @@ func Loop() bool {
 }
 
 func move(n int, player string) bool {
-	if !board.hasEmpty() {
-		fmt.Println("Draw!")
-		return false
-	}
 	fmt.Printf("Player %v (%v), your turn: ", n, player)
 	turn := read(scanner)
 
-	var row, col int
+	var c cell
+	// Input loop
 	for {
 		if !isKey(turn) {
 			board.print()
@@ -77,8 +74,8 @@ func move(n int, player string) bool {
 
 			continue
 		}
-		row, col = pos(turn)
-		if board.isFilled(row, col) {
+		c = toCell(turn)
+		if board.isFilled(c) {
 			board.print()
 			fmt.Printf("Player %v (%v), your turn: ", n, player)
 			turn = read(scanner)
@@ -87,15 +84,19 @@ func move(n int, player string) bool {
 		}
 		break
 	}
-	board[row][col] = player
+	// The turn is key and the cell is empty
+	board.setCell(c, player)
+	board.print()
 
+	// Finished?
 	if board.isWinner(player) {
-		board.print()
 		fmt.Printf("Player %v (%v) won!\n", n, player)
 		return false
 	}
-	board.print()
-
+	if !board.hasEmpty() {
+		fmt.Println("Draw!")
+		return false
+	}
 	return true
 }
 
@@ -120,16 +121,4 @@ func isKey(s string) bool {
 		return false
 	}
 	return k >= 1 && k <= 9
-}
-
-func pos(key string) (int, int) {
-	m := map[string]struct {
-		row, col int
-	}{
-		"1": {0, 0}, "2": {0, 1}, "3": {0, 2},
-		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
-		"7": {2, 0}, "8": {2, 1}, "9": {2, 2},
-	}
-	pos := m[key] // TODO: detect and propagate errors
-	return pos.row, pos.col
 }

@@ -9,12 +9,26 @@ import (
 
 type grid [3][3]string
 
-// func (b grid) setCell(row int, col int, player string) {
-// 	b[row][col] = player
-// }
+type cell struct {
+	row, col int
+}
 
-func (b grid) isFilled(row, col int) bool {
-	v := b[row][col]
+func (b *grid) setCell(c cell, player string) *grid {
+	b[c.row][c.col] = player
+	return b
+}
+
+func toCell(key string) cell {
+	m := map[string]cell{
+		"1": {0, 0}, "2": {0, 1}, "3": {0, 2},
+		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
+		"7": {2, 0}, "8": {2, 1}, "9": {2, 2},
+	}
+	return m[key] // TODO: detect and propagate errors?
+}
+
+func (b grid) isFilled(c cell) bool {
+	v := b[c.row][c.col]
 	return v != "_"
 }
 
