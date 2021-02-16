@@ -123,8 +123,9 @@ func Test_grid_setCell(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.b.setCell(tt.args.c, tt.args.player); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("grid.setCell() = %v, want %v", got, tt.want)
+			tt.b.setCell(tt.args.c, tt.args.player)
+			if !reflect.DeepEqual(tt.b, tt.want) {
+				t.Errorf("grid.setCell() = %v, want %v", tt.b, tt.want)
 			}
 		})
 	}

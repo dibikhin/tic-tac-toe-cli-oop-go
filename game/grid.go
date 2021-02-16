@@ -13,9 +13,17 @@ type cell struct {
 	row, col int
 }
 
-func (b *grid) setCell(c cell, player string) *grid {
+func (b grid) String() string {
+	var rows []string
+	for _, row := range b {
+		s := strings.Join(row[:], " ")
+		rows = append(rows, s)
+	}
+	return strings.Join(rows, "\n")
+}
+
+func (b *grid) setCell(c cell, player string) {
 	b[c.row][c.col] = player
-	return b
 }
 
 func toCell(key string) cell {
@@ -47,20 +55,20 @@ func (b grid) isWinner(s string) bool {
 	// Something better needed, too naive
 
 	// Horizontal
-	x0 := b[0][0] == s && b[0][1] == s && b[0][2] == s
-	x1 := b[1][0] == s && b[1][1] == s && b[1][2] == s
-	x2 := b[2][0] == s && b[2][1] == s && b[2][2] == s
+	h0 := b[0][0] == s && b[0][1] == s && b[0][2] == s
+	h1 := b[1][0] == s && b[1][1] == s && b[1][2] == s
+	h2 := b[2][0] == s && b[2][1] == s && b[2][2] == s
 
 	// Vertical
-	x3 := b[0][0] == s && b[1][0] == s && b[2][0] == s
-	x4 := b[0][1] == s && b[1][1] == s && b[2][1] == s
-	x5 := b[0][2] == s && b[1][2] == s && b[2][2] == s
+	v0 := b[0][0] == s && b[1][0] == s && b[2][0] == s
+	v1 := b[0][1] == s && b[1][1] == s && b[2][1] == s
+	v2 := b[0][2] == s && b[1][2] == s && b[2][2] == s
 
 	// Diagonal
-	x6 := b[0][0] == s && b[1][1] == s && b[2][2] == s
-	x7 := b[0][2] == s && b[1][1] == s && b[2][0] == s
+	d0 := b[0][0] == s && b[1][1] == s && b[2][2] == s
+	d1 := b[0][2] == s && b[1][1] == s && b[2][0] == s
 
-	return x0 || x1 || x2 || x3 || x4 || x5 || x6 || x7
+	return h0 || h1 || h2 || v0 || v1 || v2 || d0 || d1
 }
 
 // IO
@@ -68,14 +76,8 @@ func (b grid) isWinner(s string) bool {
 func (b grid) print() {
 	fmt.Println()
 	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
-
-	_print(b)
-}
-
-func _print(b grid) {
 	fmt.Println()
-	for _, row := range b {
-		fmt.Printf("%s\n", strings.Join(row[:], " "))
-	}
+
+	fmt.Println(b)
 	fmt.Println()
 }

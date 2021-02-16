@@ -1,3 +1,5 @@
+// Package game implements 3x3 Tic Tac Toe for 2 friends (cannot play with computer yet)
+// Players choose their mark, put them, then game checks the winner or draw
 package game
 
 import (
@@ -35,9 +37,12 @@ func init() {
 // Game
 
 func PrintLogo() {
-	_print(logo)
+	fmt.Println()
+	fmt.Println(logo)
+	fmt.Println()
 }
 
+// Setup helps users to choose mark
 func Setup() {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
@@ -51,6 +56,7 @@ func Setup() {
 	board.print()
 }
 
+// Loop function prompts players to take turns
 func Loop() bool {
 	ok := move(1, player1)
 	if !ok {
@@ -62,32 +68,27 @@ func Loop() bool {
 
 func move(n int, player string) bool {
 	fmt.Printf("Player %v (%v), your turn: ", n, player)
-	turn := read(scanner)
-
-	var c cell
 	// Input loop
 	for {
+		turn := read(scanner)
 		if !isKey(turn) {
 			board.print()
 			fmt.Printf("Player %v (%v), your turn: ", n, player)
-			turn = read(scanner)
 
 			continue
 		}
-		c = toCell(turn)
+		c := toCell(turn)
 		if board.isFilled(c) {
 			board.print()
 			fmt.Printf("Player %v (%v), your turn: ", n, player)
-			turn = read(scanner)
 
 			continue
 		}
+		board.setCell(c, player)
+		board.print()
+
 		break
 	}
-	// The turn is key and the cell is empty
-	board.setCell(c, player)
-	board.print()
-
 	// Finished?
 	if board.isWinner(player) {
 		fmt.Printf("Player %v (%v) won!\n", n, player)
@@ -101,11 +102,6 @@ func move(n int, player string) bool {
 }
 
 // Other
-
-func read(bs *bufio.Scanner) string {
-	bs.Scan()
-	return strings.TrimSpace(bs.Text())
-}
 
 func arrange(s string) (string, string) {
 	if strings.ToLower(s) == "x" {
@@ -121,4 +117,11 @@ func isKey(s string) bool {
 		return false
 	}
 	return k >= 1 && k <= 9
+}
+
+// IO
+
+func read(bs *bufio.Scanner) string {
+	bs.Scan()
+	return strings.TrimSpace(bs.Text())
 }
