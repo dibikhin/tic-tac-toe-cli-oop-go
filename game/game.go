@@ -3,19 +3,17 @@
 package game
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
+
+type reader func() string
 
 // Init
 
 var logo grid
 var board grid
-
-var scanner *bufio.Scanner
 
 var player1 string
 var player2 string
@@ -31,7 +29,6 @@ func init() {
 		{"_", "_", "_"},
 		{"_", "_", "_"},
 	}
-	scanner = bufio.NewScanner(os.Stdin)
 }
 
 // Game
@@ -43,10 +40,10 @@ func PrintLogo() {
 }
 
 // Setup helps users to choose mark
-func Setup() {
+func Setup(read reader) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
-	mark1 := read(scanner)
+	mark1 := read()
 	player1, player2 = arrange(mark1)
 
 	fmt.Println()
@@ -57,40 +54,22 @@ func Setup() {
 }
 
 // Loop function prompts players to take turns
-func Loop() bool {
-	ok := move(1, player1)
+func Loop(read reader) bool {
+	ok := turn(1, player1, read)
 	if !ok {
 		return false
 	}
-	ok = move(2, player2)
+	ok = turn(2, player2, read)
 	return ok
 }
 
-func move(n int, player string) bool {
+func turn(n int, player string, read reader) bool {
 	prompt(player, n)
 
-	// Input loop
-	for {
-		turn := read(scanner)
-		if !isKey(turn) {
-			board.print()
-			prompt(player, n)
+	cell := input(read, player, n)
+	board.setCell(cell, player)
+	board.print()
 
-			continue
-		}
-		c := toCell(turn)
-		if board.isFilled(c) {
-			board.print()
-			prompt(player, n)
-
-			continue
-		}
-		board.setCell(c, player)
-		board.print()
-
-		break
-	}
-	// Finished?
 	if board.isWinner(player) {
 		fmt.Printf("Player %v (%v) won!\n", n, player)
 		return false
@@ -100,6 +79,29 @@ func move(n int, player string) bool {
 		return false
 	}
 	return true
+}
+
+// Input loop
+func input(read reader, player string, n int) cell {
+	var c cell
+	for {
+		turn := read()
+		if !isKey(turn) {
+			board.print()
+			prompt(player, n)
+
+			continue
+		}
+		c = toCell(turn)
+		if board.isFilled(c) {
+			board.print()
+			prompt(player, n)
+
+			continue
+		}
+		break
+	}
+	return c
 }
 
 // Other
@@ -124,9 +126,4 @@ func isKey(s string) bool {
 
 func prompt(player string, n int) {
 	fmt.Printf("Player %v (%v), your turn: ", n, player)
-}
-
-func read(bs *bufio.Scanner) string {
-	bs.Scan()
-	return strings.TrimSpace(bs.Text())
 }
