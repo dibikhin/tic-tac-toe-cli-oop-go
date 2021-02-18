@@ -67,20 +67,21 @@ func Loop() bool {
 }
 
 func move(n int, player string) bool {
-	fmt.Printf("Player %v (%v), your turn: ", n, player)
+	prompt(player, n)
+
 	// Input loop
 	for {
 		turn := read(scanner)
 		if !isKey(turn) {
 			board.print()
-			fmt.Printf("Player %v (%v), your turn: ", n, player)
+			prompt(player, n)
 
 			continue
 		}
 		c := toCell(turn)
 		if board.isFilled(c) {
 			board.print()
-			fmt.Printf("Player %v (%v), your turn: ", n, player)
+			prompt(player, n)
 
 			continue
 		}
@@ -120,6 +121,10 @@ func isKey(s string) bool {
 }
 
 // IO
+
+func prompt(player string, n int) {
+	fmt.Printf("Player %v (%v), your turn: ", n, player)
+}
 
 func read(bs *bufio.Scanner) string {
 	bs.Scan()
