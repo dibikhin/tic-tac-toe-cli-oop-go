@@ -3,7 +3,9 @@
 package game
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -18,6 +20,8 @@ var board grid
 var player1 string
 var player2 string
 
+var scanner *bufio.Scanner
+
 func init() {
 	logo = grid{
 		{"X", " ", "X"},
@@ -29,6 +33,16 @@ func init() {
 		{"_", "_", "_"},
 		{"_", "_", "_"},
 	}
+	scanner = bufio.NewScanner(os.Stdin)
+}
+
+// IO
+
+// Read gets user's input and returns it as a text.
+// It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
+func Read() string {
+	scanner.Scan()
+	return strings.TrimSpace(scanner.Text())
 }
 
 // Game
@@ -39,7 +53,8 @@ func PrintLogo() {
 	fmt.Println()
 }
 
-// Setup helps users to choose mark
+// Setup helps users to choose mark.
+// The `read` param is a strategy to prevent mocking
 func Setup(read reader) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
@@ -53,14 +68,16 @@ func Setup(read reader) {
 	board.print()
 }
 
-// Loop function prompts players to take turns
-func Loop(read reader) bool {
+// Loop function prompts players to take turns.
+// The `read` param is a strategy to prevent mocking
+// The `grid` is returned for testing
+func Loop(read reader) (grid, bool) {
 	ok := turn(1, player1, read)
 	if !ok {
-		return false
+		return board, false
 	}
 	ok = turn(2, player2, read)
-	return ok
+	return board, ok
 }
 
 func turn(n int, player string, read reader) bool {

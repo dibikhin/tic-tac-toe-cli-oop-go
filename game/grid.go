@@ -75,6 +75,7 @@ func (b grid) isWinner(s string) bool {
 
 func (b grid) print() {
 	fmt.Println()
+	fmt.Println()
 	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
 	fmt.Println()
 

@@ -1,6 +1,8 @@
 package game
 
 import (
+	// "reflect"
+	// "strconv"
 	"testing"
 )
 
@@ -80,3 +82,44 @@ func Test_toCell(t *testing.T) {
 		})
 	}
 }
+
+// func TestLoop(t *testing.T) {
+// 	type args struct {
+// 		read reader
+// 	}
+// 	tests := []struct {
+// 		name  string
+// 		args  args
+// 		want  grid
+// 		want1 bool
+// 	}{
+// 		{"qqq", args{rdr},
+// 			grid{
+// 				{"_", "_", "_"},
+// 				{"_", "X", "_"},
+// 				{"_", "_", "_"},
+// 			},
+// 			true},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			got, got1 := Loop(tt.args.read)
+// 			if !reflect.DeepEqual(got, tt.want) {
+// 				t.Errorf("Loop() got = %v, want %v", got, tt.want)
+// 			}
+// 			if got1 != tt.want1 {
+// 				t.Errorf("Loop() got1 = %v, want %v", got1, tt.want1)
+// 			}
+// 		})
+// 	}
+// }
+
+// var c = 0
+
+// func rdr() string {
+// 	if c > 9 {
+// 		return ""
+// 	}
+// 	c++
+// 	return strconv.Itoa(c)
+// }

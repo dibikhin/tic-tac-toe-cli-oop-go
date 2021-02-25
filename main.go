@@ -2,32 +2,18 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strings"
 	game "tictactoe/game"
 )
-
-var scanner *bufio.Scanner
-
-func init() {
-	scanner = bufio.NewScanner(os.Stdin)
-}
 
 // $ clear && go run main.go
 func main() {
 	fmt.Println("Hey! This is 3x3 Tic Tac Toe for 2 friends :)")
 
 	game.PrintLogo()
-	game.Setup(read)
-	for game.Loop(read) {
+	game.Setup(game.Read)
+	_, ok := game.Loop(game.Read)
+	for ok {
+		_, ok = game.Loop(game.Read)
 	}
-}
-
-// IO
-
-func read() string {
-	scanner.Scan()
-	return strings.TrimSpace(scanner.Text())
 }
