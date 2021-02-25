@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+type mark = string // to avoid conversions
+
 type reader func() string
 
 // Init
@@ -17,8 +19,8 @@ type reader func() string
 var logo grid
 var board grid
 
-var player1 string
-var player2 string
+var player1 mark
+var player2 mark
 
 var scanner *bufio.Scanner
 
@@ -80,7 +82,7 @@ func Loop(read reader) (grid, bool) {
 	return board, ok
 }
 
-func turn(n int, player string, read reader) bool {
+func turn(n int, player mark, read reader) bool {
 	prompt(player, n)
 
 	cell := input(read, player, n)
@@ -99,7 +101,7 @@ func turn(n int, player string, read reader) bool {
 }
 
 // Input loop
-func input(read reader, player string, n int) cell {
+func input(read reader, player mark, n int) cell {
 	var c cell
 	for {
 		turn := read()
@@ -123,7 +125,7 @@ func input(read reader, player string, n int) cell {
 
 // Other
 
-func arrange(s string) (string, string) {
+func arrange(s string) (mark, mark) {
 	if strings.ToLower(s) == "x" {
 		return "X", "O"
 	} else {
@@ -141,6 +143,6 @@ func isKey(s string) bool {
 
 // IO
 
-func prompt(player string, n int) {
+func prompt(player mark, n int) {
 	fmt.Printf("Player %v (%v), your turn: ", n, player)
 }

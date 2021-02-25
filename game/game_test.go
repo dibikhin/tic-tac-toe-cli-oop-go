@@ -93,14 +93,45 @@ func Test_toCell(t *testing.T) {
 // 		want  grid
 // 		want1 bool
 // 	}{
-// 		{"qqq", args{rdr},
+// 		{"init", args{readerMock},
 // 			grid{
 // 				{"_", "_", "_"},
-// 				{"_", "X", "_"},
+// 				{"_", "_", "_"},
+// 				{"_", "_", "_"},
+// 			},
+// 			true},
+// 		{"O: 1", args{readerMock},
+// 			grid{
+// 				{"O", "_", "_"},
+// 				{"_", "_", "_"},
+// 				{"_", "_", "_"},
+// 			},
+// 			true},
+// 		{"X: 2", args{readerMock},
+// 			grid{
+// 				{"O", "X", "_"},
+// 				{"_", "_", "_"},
+// 				{"_", "_", "_"},
+// 			},
+// 			true},
+// 		{"O: 3", args{readerMock},
+// 			grid{
+// 				{"O", "X", "O"},
+// 				{"_", "_", "_"},
+// 				{"_", "_", "_"},
+// 			},
+// 			true},
+// 		{"X: 4", args{readerMock},
+// 			grid{
+// 				{"O", "X", "O"},
+// 				{"X", "_", "_"},
 // 				{"_", "_", "_"},
 // 			},
 // 			true},
 // 	}
+
+// 	Setup(readerMock) // NOTE
+
 // 	for _, tt := range tests {
 // 		t.Run(tt.name, func(t *testing.T) {
 // 			got, got1 := Loop(tt.args.read)
@@ -114,9 +145,9 @@ func Test_toCell(t *testing.T) {
 // 	}
 // }
 
-// var c = 0
+// var c = -1
 
-// func rdr() string {
+// func readerMock() string {
 // 	if c > 9 {
 // 		return ""
 // 	}
