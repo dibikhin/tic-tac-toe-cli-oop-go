@@ -1,9 +1,9 @@
 package game
 
 import (
-	// "reflect"
-	// "strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_arrange(t *testing.T) {
@@ -83,74 +83,84 @@ func Test_toCell(t *testing.T) {
 	}
 }
 
-// func TestLoop(t *testing.T) {
-// 	type args struct {
-// 		read reader
-// 	}
-// 	tests := []struct {
-// 		name  string
-// 		args  args
-// 		want  grid
-// 		want1 bool
-// 	}{
-// 		{"init", args{readerMock},
-// 			grid{
-// 				{"_", "_", "_"},
-// 				{"_", "_", "_"},
-// 				{"_", "_", "_"},
-// 			},
-// 			true},
-// 		{"O: 1", args{readerMock},
-// 			grid{
-// 				{"O", "_", "_"},
-// 				{"_", "_", "_"},
-// 				{"_", "_", "_"},
-// 			},
-// 			true},
-// 		{"X: 2", args{readerMock},
-// 			grid{
-// 				{"O", "X", "_"},
-// 				{"_", "_", "_"},
-// 				{"_", "_", "_"},
-// 			},
-// 			true},
-// 		{"O: 3", args{readerMock},
-// 			grid{
-// 				{"O", "X", "O"},
-// 				{"_", "_", "_"},
-// 				{"_", "_", "_"},
-// 			},
-// 			true},
-// 		{"X: 4", args{readerMock},
-// 			grid{
-// 				{"O", "X", "O"},
-// 				{"X", "_", "_"},
-// 				{"_", "_", "_"},
-// 			},
-// 			true},
-// 	}
+func TestLoop(t *testing.T) {
+	// NOTE: intentionally kept dirty to lower maintenance
 
-// 	Setup(readerMock) // NOTE
+	f := true
+	tests := []struct {
+		name  string
+		read  reader
+		want  grid
+		want1 bool
+	}{
+		{"O: 1, X: 2",
+			func() string {
+				if f {
+					f = !f
+					return "1"
+				}
+				f = !f
+				return "2"
+			},
+			grid{
+				{"O", "X", "_"},
+				{"_", "_", "_"},
+				{"_", "_", "_"},
+			},
+			true},
 
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			got, got1 := Loop(tt.args.read)
-// 			if !reflect.DeepEqual(got, tt.want) {
-// 				t.Errorf("Loop() got = %v, want %v", got, tt.want)
-// 			}
-// 			if got1 != tt.want1 {
-// 				t.Errorf("Loop() got1 = %v, want %v", got1, tt.want1)
-// 			}
-// 		})
-// 	}
-// }
+		{"O: 3, X: 4",
+			func() string {
+				if f {
+					f = !f
+					return "3"
+				}
+				f = !f
+				return "4"
+			},
+			grid{
+				{"O", "X", "O"},
+				{"X", "_", "_"},
+				{"_", "_", "_"},
+			},
+			true},
+		{"O: 5, X: 6",
+			func() string {
+				if f {
+					f = !f
+					return "5"
+				}
+				f = !f
+				return "6"
+			},
+			grid{
+				{"O", "X", "O"},
+				{"X", "O", "X"},
+				{"_", "_", "_"},
+			},
+			true},
+		{"O: 7",
+			func() string { return "7" },
+			grid{
+				{"O", "X", "O"},
+				{"X", "O", "X"},
+				{"O", "_", "_"},
+			},
+			false},
+	}
 
-// var c = -1
+	Setup(func() string { return "o" }) // NOTE
 
-// func readerMock() string {
-// 	if c > 9 {
-// 		return ""
-// 	}
-// 	c++
-// 	return strconv.Itoa(c)
-// }
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := Loop(tt.read)
+			// assert.Equal is for verbose output
+			if !assert.Equal(t, tt.want, got) {
+				t.Errorf("Loop() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("Loop() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}

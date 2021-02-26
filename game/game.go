@@ -1,4 +1,4 @@
-// Package game implements 3x3 Tic Tac Toe for 2 friends (cannot play with computer yet)
+// Package Game implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet)
 // Players choose their mark, put them, then game checks the winner or draw
 package game
 

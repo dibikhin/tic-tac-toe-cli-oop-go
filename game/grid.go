@@ -1,7 +1,7 @@
 package game
 
 import (
-	// "fmt"
+	"fmt"
 	"strings"
 )
 
@@ -74,12 +74,11 @@ func (b grid) isWinner(m mark) bool {
 // IO
 
 func (b grid) print() {
-	println("print")
-	// fmt.Println()
-	// fmt.Println()
-	// fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
-	// fmt.Println()
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
+	fmt.Println()
 
-	// fmt.Println(b)
-	// fmt.Println()
+	fmt.Println(b)
+	fmt.Println()
 }
