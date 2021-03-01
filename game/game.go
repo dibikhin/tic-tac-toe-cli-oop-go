@@ -1,5 +1,5 @@
 // Package Game implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet)
-// Players choose their mark, put them, then game checks the winner or draw
+// Players choose their mark, put them, the game checks the winner or draw
 package game
 
 import (
@@ -12,30 +12,39 @@ import (
 
 type mark = string // to avoid conversions
 
+type player struct {
+	mark mark
+	num  int
+}
+
+func (p player) String() string {
+	return fmt.Sprintf(`Player %v ("%v")`, p.num, p.mark)
+}
+
 type reader func() string
 
 // Init
 
-var logo grid
-var board grid
+var _logo grid
+var _board grid
 
-var player1 mark
-var player2 mark
+var _player1 player
+var _player2 player
 
-var scanner *bufio.Scanner
+var _scanner *bufio.Scanner
 
 func init() {
-	logo = grid{
+	_logo = grid{
 		{"X", " ", "X"},
 		{"O", "X", "O"},
 		{"X", " ", "O"},
 	}
-	board = grid{
+	_board = grid{
 		{"_", "_", "_"},
 		{"_", "_", "_"},
 		{"_", "_", "_"},
 	}
-	scanner = bufio.NewScanner(os.Stdin)
+	_scanner = bufio.NewScanner(os.Stdin)
 }
 
 // IO
@@ -43,15 +52,15 @@ func init() {
 // Read gets user's input and returns it as a text.
 // It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
 func Read() string {
-	scanner.Scan()
-	return strings.TrimSpace(scanner.Text())
+	_scanner.Scan()
+	return strings.TrimSpace(_scanner.Text())
 }
 
 // Game
 
 func PrintLogo() {
 	fmt.Println()
-	fmt.Println(logo)
+	fmt.Println(_logo)
 	fmt.Println()
 }
 
@@ -61,39 +70,39 @@ func Setup(read reader) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
 	mark1 := read()
-	player1, player2 = arrange(mark1)
+	_player1, _player2 = arrange(mark1)
 
 	fmt.Println()
-	fmt.Println("Player 1 is:", player1)
-	fmt.Println("Player 2 is:", player2)
+	fmt.Println(_player1)
+	fmt.Println(_player2)
 
-	board.print()
+	_board.print()
 }
 
 // Loop function prompts players to take turns.
 // The `read` param is a strategy to prevent mocking
 // The `grid` is returned for testing
 func Loop(read reader) (grid, bool) {
-	ok := turn(1, player1, read)
+	ok := turn(_player1, read)
 	if !ok {
-		return board, false
+		return _board, false
 	}
-	ok = turn(2, player2, read)
-	return board, ok
+	ok = turn(_player2, read)
+	return _board, ok
 }
 
-func turn(n int, player mark, read reader) bool {
-	prompt(player, n)
+func turn(p player, read reader) bool {
+	prompt(p)
 
-	cell := input(read, player, n)
-	board.setCell(cell, player)
-	board.print()
+	cell := input(read, p)
+	_board.setCell(cell, p.mark)
+	_board.print()
 
-	if board.isWinner(player) {
-		fmt.Printf("Player %v (%v) won!\n", n, player)
+	if _board.isWinner(p.mark) {
+		fmt.Printf("%v won!\n", p)
 		return false
 	}
-	if !board.hasEmpty() {
+	if !_board.hasEmpty() {
 		fmt.Println("Draw!")
 		return false
 	}
@@ -101,20 +110,20 @@ func turn(n int, player mark, read reader) bool {
 }
 
 // Input loop
-func input(read reader, player mark, n int) cell {
+func input(read reader, p player) cell {
 	var c cell
 	for {
 		turn := read()
 		if !isKey(turn) {
-			board.print()
-			prompt(player, n)
+			_board.print()
+			prompt(p)
 
 			continue
 		}
 		c = toCell(turn)
-		if board.isFilled(c) {
-			board.print()
-			prompt(player, n)
+		if _board.isFilled(c) {
+			_board.print()
+			prompt(p)
 
 			continue
 		}
@@ -125,11 +134,11 @@ func input(read reader, player mark, n int) cell {
 
 // Other
 
-func arrange(s string) (mark, mark) {
+func arrange(s string) (player, player) {
 	if strings.ToLower(s) == "x" {
-		return "X", "O"
+		return player{"X", 1}, player{"O", 2}
 	} else {
-		return "O", "X"
+		return player{"O", 1}, player{"X", 2}
 	}
 }
 
@@ -143,6 +152,6 @@ func isKey(s string) bool {
 
 // IO
 
-func prompt(player mark, n int) {
-	fmt.Printf("Player %v (%v), your turn: ", n, player)
+func prompt(p player) {
+	fmt.Printf("%v, your turn: ", p)
 }

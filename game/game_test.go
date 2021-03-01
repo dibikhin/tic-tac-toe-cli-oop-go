@@ -10,26 +10,26 @@ func Test_arrange(t *testing.T) {
 	tests := []struct {
 		name  string
 		arg   string
-		want  string
-		want1 string
+		want1 player
+		want2 player
 	}{
-		{"empty", "", "O", "X"},
-		{"space", "    ", "O", "X"},
-		{"junk", "^G$FDTeg39dslf*^58)#", "O", "X"},
-		{"small x", "x", "X", "O"},
-		{"big X", "X", "X", "O"},
-		{"small o", "o", "O", "X"},
-		{"big O", "O", "O", "X"},
-		{"zero", "0", "O", "X"},
+		{"empty", "", player{"O", 1}, player{"X", 2}},
+		{"space", "    ", player{"O", 1}, player{"X", 2}},
+		{"junk", "^G$FDTeg39dslf*^58)#", player{"O", 1}, player{"X", 2}},
+		{"small x", "x", player{"X", 1}, player{"O", 2}},
+		{"big X", "X", player{"X", 1}, player{"O", 2}},
+		{"small o", "o", player{"O", 1}, player{"X", 2}},
+		{"big O", "O", player{"O", 1}, player{"X", 2}},
+		{"zero", "0", player{"O", 1}, player{"X", 2}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := arrange(tt.arg)
-			if got != tt.want {
-				t.Errorf("arrange() got = %v, want %v", got, tt.want)
-			}
+			got1, got2 := arrange(tt.arg)
 			if got1 != tt.want1 {
-				t.Errorf("arrange() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("arrange() got = %v, want %v", got1, tt.want1)
+			}
+			if got2 != tt.want2 {
+				t.Errorf("arrange() got1 = %v, want %v", got2, tt.want2)
 			}
 		})
 	}
