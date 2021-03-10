@@ -23,7 +23,8 @@ func (p player) String() string {
 
 type reader func() string
 
-// Init
+// Package state.
+// It's here to simplify dependency injection.
 
 var _logo grid
 var _board grid
@@ -33,7 +34,12 @@ var _player2 player
 
 var _scanner *bufio.Scanner
 
-func init() {
+// Game
+
+// Setup helps users to choose mark.
+// The `read` param is a strategy to prevent mocking
+func Setup(read reader) {
+	// Init
 	_logo = grid{
 		{"X", " ", "X"},
 		{"O", "X", "O"},
@@ -45,28 +51,10 @@ func init() {
 		{"_", "_", "_"},
 	}
 	_scanner = bufio.NewScanner(os.Stdin)
-}
 
-// IO
+	printLogo()
 
-// Read gets user's input and returns it as a text.
-// It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
-func Read() string {
-	_scanner.Scan()
-	return strings.TrimSpace(_scanner.Text())
-}
-
-// Game
-
-func PrintLogo() {
-	fmt.Println()
-	fmt.Println(_logo)
-	fmt.Println()
-}
-
-// Setup helps users to choose mark.
-// The `read` param is a strategy to prevent mocking
-func Setup(read reader) {
+	// Game setup
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
 	mark1 := read()
@@ -91,10 +79,21 @@ func Loop(read reader) (grid, bool) {
 	return _board, ok
 }
 
+// IO
+
+// Read gets user's input and returns it as a text.
+// It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
+func Read() string {
+	_scanner.Scan()
+	return strings.TrimSpace(_scanner.Text())
+}
+
+// Private
+
 func turn(p player, read reader) bool {
 	prompt(p)
 
-	cell := input(read, p)
+	cell := inputLoop(read, p)
 	_board.setCell(cell, p.mark)
 	_board.print()
 
@@ -109,8 +108,7 @@ func turn(p player, read reader) bool {
 	return true
 }
 
-// Input loop
-func input(read reader, p player) cell {
+func inputLoop(read reader, p player) cell {
 	var c cell
 	for {
 		turn := read()
@@ -132,6 +130,19 @@ func input(read reader, p player) cell {
 	return c
 }
 
+// IO
+
+func printLogo() {
+	fmt.Println()
+	fmt.Println(_logo)
+	fmt.Println()
+}
+
+func prompt(p player) {
+	var _ fmt.Stringer = player{}
+	fmt.Printf("%v, your turn: ", p)
+}
+
 // Other
 
 func arrange(s string) (player, player) {
@@ -148,10 +159,4 @@ func isKey(s string) bool {
 		return false
 	}
 	return k >= 1 && k <= 9
-}
-
-// IO
-
-func prompt(p player) {
-	fmt.Printf("%v, your turn: ", p)
 }

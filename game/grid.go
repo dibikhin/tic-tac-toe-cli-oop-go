@@ -5,13 +5,24 @@ import (
 	"strings"
 )
 
-// Grid
-
-type grid [3][3]mark
+// Cell
 
 type cell struct {
 	row, col int
 }
+
+func toCell(key string) cell {
+	m := map[string]cell{
+		"1": {0, 0}, "2": {0, 1}, "3": {0, 2},
+		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
+		"7": {2, 0}, "8": {2, 1}, "9": {2, 2},
+	}
+	return m[key] // TODO: detect and propagate errors?
+}
+
+// Grid
+
+type grid [3][3]mark
 
 func (b grid) String() string {
 	var rows []mark
@@ -24,15 +35,6 @@ func (b grid) String() string {
 
 func (b *grid) setCell(c cell, m mark) {
 	b[c.row][c.col] = m
-}
-
-func toCell(key string) cell {
-	m := map[string]cell{
-		"1": {0, 0}, "2": {0, 1}, "3": {0, 2},
-		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
-		"7": {2, 0}, "8": {2, 1}, "9": {2, 2},
-	}
-	return m[key] // TODO: detect and propagate errors?
 }
 
 func (b grid) isFilled(c cell) bool {
@@ -74,6 +76,8 @@ func (b grid) isWinner(m mark) bool {
 // IO
 
 func (b grid) print() {
+	var _ fmt.Stringer = grid{}
+
 	fmt.Println()
 	fmt.Println()
 	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
