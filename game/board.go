@@ -20,11 +20,11 @@ func toCell(key string) cell {
 	return m[key] // TODO: detect and propagate errors?
 }
 
-// Grid
+// Board
 
-type grid [3][3]mark
+type board [3][3]mark
 
-func (b grid) String() string {
+func (b board) String() string {
 	var rows []mark
 	for _, row := range b {
 		s := strings.Join(row[:], " ")
@@ -33,16 +33,16 @@ func (b grid) String() string {
 	return strings.Join(rows, "\n")
 }
 
-func (b *grid) setCell(c cell, m mark) {
+func (b *board) setCell(c cell, m mark) {
 	b[c.row][c.col] = m
 }
 
-func (b grid) isFilled(c cell) bool {
+func (b board) isFilled(c cell) bool {
 	v := b[c.row][c.col]
 	return v != "_"
 }
 
-func (b grid) hasEmpty() bool {
+func (b board) hasEmpty() bool {
 	for _, row := range b {
 		for _, v := range row {
 			if v == "_" {
@@ -53,7 +53,7 @@ func (b grid) hasEmpty() bool {
 	return false
 }
 
-func (b grid) isWinner(m mark) bool {
+func (b board) isWinner(m mark) bool {
 	// Something better needed, too naive
 
 	// Horizontal
@@ -75,8 +75,8 @@ func (b grid) isWinner(m mark) bool {
 
 // IO
 
-func (b grid) print() {
-	var _ fmt.Stringer = grid{}
+func (b board) print() {
+	var _ fmt.Stringer = board{}
 
 	fmt.Println()
 	fmt.Println()

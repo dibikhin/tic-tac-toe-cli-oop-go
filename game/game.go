@@ -26,35 +26,66 @@ type reader func() string
 // Package state.
 // It's here to simplify dependency injection.
 
-var _logo grid
-var _board grid
+var (
+	_logo  board
+	_board board
 
-var _player1 player
-var _player2 player
+	_player1 player
+	_player2 player
 
-var _scanner *bufio.Scanner
+	_scanner *bufio.Scanner
+)
 
-// Game
+// Public
 
-// Setup helps users to choose mark.
+// Setup initialized the game and helps players to choose mark.
 // The `read` param is a strategy to prevent mocking
 func Setup(read reader) {
-	// Init
-	_logo = grid{
+	_init()
+	printLogo()
+	setupGame(read)
+}
+
+// Loop prompts players to take turns.
+// The `read` param is a strategy to prevent mocking
+// The `board` is returned for testing
+func Loop(read reader) (board, bool) {
+	ok := turn(_player1, read)
+	if !ok {
+		return _board, false
+	}
+	ok = turn(_player2, read)
+	return _board, ok
+}
+
+// IO
+
+// Read gets players's input and returns it as a text.
+// It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
+func Read() string {
+	_scanner.Scan()
+	return strings.TrimSpace(_scanner.Text())
+}
+
+// Private
+
+// Setup
+
+func _init() {
+	_logo = board{
 		{"X", " ", "X"},
 		{"O", "X", "O"},
 		{"X", " ", "O"},
 	}
-	_board = grid{
+	_board = board{
 		{"_", "_", "_"},
 		{"_", "_", "_"},
 		{"_", "_", "_"},
 	}
 	_scanner = bufio.NewScanner(os.Stdin)
+}
 
-	printLogo()
-
-	// Game setup
+func setupGame(read reader) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
 	mark1 := read()
@@ -67,28 +98,7 @@ func Setup(read reader) {
 	_board.print()
 }
 
-// Loop function prompts players to take turns.
-// The `read` param is a strategy to prevent mocking
-// The `grid` is returned for testing
-func Loop(read reader) (grid, bool) {
-	ok := turn(_player1, read)
-	if !ok {
-		return _board, false
-	}
-	ok = turn(_player2, read)
-	return _board, ok
-}
-
-// IO
-
-// Read gets user's input and returns it as a text.
-// It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
-func Read() string {
-	_scanner.Scan()
-	return strings.TrimSpace(_scanner.Text())
-}
-
-// Private
+// Game
 
 func turn(p player, read reader) bool {
 	prompt(p)
