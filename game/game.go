@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-type mark = string // to avoid conversions
+// Game types
 
 type player struct {
 	mark mark
@@ -78,16 +78,15 @@ func _init() {
 		{"X", " ", "O"},
 	}
 	_board = board{
-		{"_", "_", "_"},
-		{"_", "_", "_"},
-		{"_", "_", "_"},
+		{_blank, _blank, _blank},
+		{_blank, _blank, _blank},
+		{_blank, _blank, _blank},
 	}
 	_scanner = bufio.NewScanner(os.Stdin)
 }
 
 func setupGame(read reader) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
-
 	mark1 := read()
 	_player1, _player2 = arrange(mark1)
 
@@ -140,19 +139,6 @@ func inputLoop(read reader, p player) cell {
 	return c
 }
 
-// IO
-
-func printLogo() {
-	fmt.Println()
-	fmt.Println(_logo)
-	fmt.Println()
-}
-
-func prompt(p player) {
-	var _ fmt.Stringer = player{}
-	fmt.Printf("%v, your turn: ", p)
-}
-
 // Other
 
 func arrange(s string) (player, player) {
@@ -169,4 +155,17 @@ func isKey(s string) bool {
 		return false
 	}
 	return k >= 1 && k <= 9
+}
+
+// IO
+
+func printLogo() {
+	fmt.Println()
+	fmt.Println(_logo)
+	fmt.Println()
+}
+
+func prompt(p player) {
+	var _ fmt.Stringer = player{}
+	fmt.Printf("%v, your turn: ", p)
 }

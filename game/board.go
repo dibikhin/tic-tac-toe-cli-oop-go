@@ -22,6 +22,10 @@ func toCell(key string) cell {
 
 // Board
 
+const _blank = "_"
+
+type mark = string // to avoid conversions
+
 type board [3][3]mark
 
 func (b board) String() string {
@@ -39,13 +43,13 @@ func (b *board) setCell(c cell, m mark) {
 
 func (b board) isFilled(c cell) bool {
 	v := b[c.row][c.col]
-	return v != "_"
+	return v != _blank
 }
 
 func (b board) hasEmpty() bool {
 	for _, row := range b {
 		for _, v := range row {
-			if v == "_" {
+			if v == _blank {
 				return true
 			}
 		}
