@@ -6,11 +6,14 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
 // Game types
+
+type reader func() string
+
+// Player
 
 type player struct {
 	mark mark
@@ -21,12 +24,20 @@ func (p player) String() string {
 	return fmt.Sprintf(`Player %v ("%v")`, p.num, p.mark)
 }
 
-type reader func() string
+func arrange(m mark) (player, player) {
+	if strings.ToLower(m) == "x" {
+		return player{"X", 1}, player{"O", 2}
+	} else {
+		return player{"O", 1}, player{"X", 2}
+	}
+}
 
-// Package state.
+// Private package state.
 // It's here to simplify dependency injection.
 
 var (
+	_ready = false
+
 	_logo  board
 	_board board
 
@@ -44,12 +55,17 @@ func Setup(read reader) {
 	_init()
 	printLogo()
 	setupGame(read)
+
+	_ready = true
 }
 
 // Loop prompts players to take turns.
 // The `read` param is a strategy to prevent mocking
-// The `board` is returned for testing
+// The `board` is returned for tests only
 func Loop(read reader) (board, bool) {
+	if !_ready {
+		return _board, false
+	}
 	ok := turn(_player1, read)
 	if !ok {
 		return _board, false
@@ -65,6 +81,8 @@ func Loop(read reader) (board, bool) {
 func Read() string {
 	_scanner.Scan()
 	return strings.TrimSpace(_scanner.Text())
+
+	// TODO have to check and propagate _scanner.Err() ?
 }
 
 // Private
@@ -99,15 +117,15 @@ func setupGame(read reader) {
 
 // Game
 
-func turn(p player, read reader) bool {
-	prompt(p)
+func turn(them player, read reader) bool {
+	prompt(them)
 
-	cell := inputLoop(read, p)
-	_board.setCell(cell, p.mark)
+	cell := inputLoop(read, them)
+	_board.setCell(cell, them.mark)
 	_board.print()
 
-	if _board.isWinner(p.mark) {
-		fmt.Printf("%v won!\n", p)
+	if _board.isWinner(them.mark) {
+		fmt.Printf("%v won!\n", them)
 		return false
 	}
 	if !_board.hasEmpty() {
@@ -117,44 +135,26 @@ func turn(p player, read reader) bool {
 	return true
 }
 
-func inputLoop(read reader, p player) cell {
-	var c cell
+func inputLoop(read reader, pers player) cell {
+	var cel cell
 	for {
 		turn := read()
 		if !isKey(turn) {
 			_board.print()
-			prompt(p)
+			prompt(pers)
 
 			continue
 		}
-		c = toCell(turn)
-		if _board.isFilled(c) {
+		cel = toCell(turn)
+		if _board.isFilled(cel) {
 			_board.print()
-			prompt(p)
+			prompt(pers)
 
 			continue
 		}
 		break
 	}
-	return c
-}
-
-// Other
-
-func arrange(s string) (player, player) {
-	if strings.ToLower(s) == "x" {
-		return player{"X", 1}, player{"O", 2}
-	} else {
-		return player{"O", 1}, player{"X", 2}
-	}
-}
-
-func isKey(s string) bool {
-	k, err := strconv.Atoi(s)
-	if err != nil {
-		return false
-	}
-	return k >= 1 && k <= 9
+	return cel
 }
 
 // IO

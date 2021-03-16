@@ -2,8 +2,21 @@ package game
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
+
+// Key
+
+type key = string
+
+func isKey(k key) bool {
+	n, err := strconv.Atoi(k)
+	if err != nil {
+		return false
+	}
+	return n >= 1 && n <= 9
+}
 
 // Cell
 
@@ -11,45 +24,47 @@ type cell struct {
 	row, col int
 }
 
-func toCell(key string) cell {
-	m := map[string]cell{
+func toCell(k key) cell {
+	coords := map[key]cell{
 		"1": {0, 0}, "2": {0, 1}, "3": {0, 2},
 		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
 		"7": {2, 0}, "8": {2, 1}, "9": {2, 2},
 	}
-	return m[key] // TODO: detect and propagate errors?
+	return coords[k] // TODO: detect and propagate errors?
 }
 
 // Board
 
 const _blank = "_"
 
-type mark = string // to avoid conversions
-
-type board [3][3]mark
+type (
+	mark  = string // to avoid conversions
+	board [3][3]mark
+)
 
 func (b board) String() string {
-	var rows []mark
+	var dump []string
 	for _, row := range b {
 		s := strings.Join(row[:], " ")
-		rows = append(rows, s)
+		dump = append(dump, s)
 	}
-	return strings.Join(rows, "\n")
+	return strings.Join(dump, "\n")
 }
+
+// Private
 
 func (b *board) setCell(c cell, m mark) {
 	b[c.row][c.col] = m
 }
 
 func (b board) isFilled(c cell) bool {
-	v := b[c.row][c.col]
-	return v != _blank
+	return b[c.row][c.col] != _blank
 }
 
 func (b board) hasEmpty() bool {
 	for _, row := range b {
-		for _, v := range row {
-			if v == _blank {
+		for _, m := range row {
+			if m == _blank {
 				return true
 			}
 		}
