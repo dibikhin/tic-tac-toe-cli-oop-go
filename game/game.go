@@ -4,6 +4,7 @@ package game
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -62,16 +63,16 @@ func Setup(read reader) {
 // Loop prompts players to take turns.
 // The `read` param is a strategy to prevent mocking
 // The `board` is returned for tests only
-func Loop(read reader) (board, bool) {
+func Loop(read reader) (board, bool, error) {
 	if !_ready {
-		return _board, false
+		return _board, false, errors.New("setup failed")
 	}
-	ok := turn(_player1, read)
-	if !ok {
-		return _board, false
+	more := turn(_player1, read)
+	if !more {
+		return _board, false, nil
 	}
-	ok = turn(_player2, read)
-	return _board, ok
+	more = turn(_player2, read)
+	return _board, more, nil
 }
 
 // IO

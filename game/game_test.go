@@ -153,7 +153,7 @@ func TestLoop(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := Loop(tt.read)
+		got, got1, _ := Loop(tt.read)
 			// assert.Equal is for verbose output
 			if !assert.Equal(t, tt.want, got) {
 				t.Errorf("Loop() got = %v, want %v", got, tt.want)
