@@ -165,7 +165,6 @@ func printLogo() {
 	fmt.Println()
 }
 
-func prompt(p player) {
-	var _ fmt.Stringer = player{}
-	fmt.Printf("%v, your turn: ", p)
+func prompt(s fmt.Stringer) {
+	fmt.Printf("%v, your turn: ", s)
 }
