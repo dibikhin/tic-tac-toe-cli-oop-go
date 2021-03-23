@@ -35,6 +35,7 @@ func arrange(m mark) (player, player) {
 
 // Private package state.
 // It's here to simplify dependency injection.
+// There was no need to expose the private state as context.
 
 var (
 	_ready = false
@@ -53,9 +54,9 @@ var (
 // Setup initialized the game and helps players to choose mark.
 // The `read` param is a strategy to prevent mocking
 func Setup(read reader) {
-	_init()
-	printLogo()
-	setupGame(read)
+	_logo, _board, _scanner = _init()
+	printLogo(_logo)
+	_player1, _player2 = setupGame(read, _board)
 
 	_ready = true
 }
@@ -67,11 +68,11 @@ func Loop(read reader) (board, bool, error) {
 	if !_ready {
 		return _board, false, errors.New("setup failed")
 	}
-	more := turn(_player1, read)
+	more := turn(_player1, read, &_board)
 	if !more {
 		return _board, false, nil
 	}
-	more = turn(_player2, read)
+	more = turn(_player2, read, &_board)
 	return _board, more, nil
 }
 
@@ -90,65 +91,68 @@ func Read() string {
 
 // Setup
 
-func _init() {
-	_logo = board{
+func _init() (board, board, *bufio.Scanner) {
+	logo := board{
 		{"X", " ", "X"},
 		{"O", "X", "O"},
 		{"X", " ", "O"},
 	}
-	_board = board{
+	board := board{
 		{_blank, _blank, _blank},
 		{_blank, _blank, _blank},
 		{_blank, _blank, _blank},
 	}
-	_scanner = bufio.NewScanner(os.Stdin)
+	scanner := bufio.NewScanner(os.Stdin)
+	return logo, board, scanner
 }
 
-func setupGame(read reader) {
+func setupGame(read reader, b board) (player, player) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 	mark1 := read()
-	_player1, _player2 = arrange(mark1)
+	p1, p2 := arrange(mark1)
 
 	fmt.Println()
-	fmt.Println(_player1)
-	fmt.Println(_player2)
+	fmt.Println(p1)
+	fmt.Println(p2)
 
-	_board.print()
+	b.print()
+
+	return p1, p2
 }
 
 // Game
 
-func turn(them player, read reader) bool {
+func turn(them player, read reader, board *board) bool {
 	prompt(them)
 
-	cell := inputLoop(read, them)
-	_board.setCell(cell, them.mark)
-	_board.print()
+	cell := inputLoop(read, them, board)
+	board.setCell(cell, them.mark)
+	board.print()
 
-	if _board.isWinner(them.mark) {
+	if board.isWinner(them.mark) {
 		fmt.Printf("%v won!\n", them)
 		return false
 	}
-	if !_board.hasEmpty() {
+	if !board.hasEmpty() {
 		fmt.Println("Draw!")
 		return false
 	}
 	return true
 }
 
-func inputLoop(read reader, pers player) cell {
+func inputLoop(read reader, pers player, board *board) cell {
 	var cel cell
 	for {
 		turn := read()
 		if !isKey(turn) {
-			_board.print()
+			board.print()
 			prompt(pers)
 
 			continue
 		}
 		cel = toCell(turn)
-		if _board.isFilled(cel) {
-			_board.print()
+		if board.isFilled(cel) {
+			board.print()
 			prompt(pers)
 
 			continue
@@ -160,9 +164,9 @@ func inputLoop(read reader, pers player) cell {
 
 // IO
 
-func printLogo() {
+func printLogo(s fmt.Stringer) {
 	fmt.Println()
-	fmt.Println(_logo)
+	fmt.Println(s)
 	fmt.Println()
 }
 
