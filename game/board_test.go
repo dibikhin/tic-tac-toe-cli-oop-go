@@ -5,19 +5,19 @@ import (
 	"testing"
 )
 
-func Test_grid_isFilled(t *testing.T) {
+func Test_board_isFilled(t *testing.T) {
 	tests := []struct {
 		name string
-		b    grid
+		b    board
 		args cell
 		want bool
 	}{
-		{"filled", grid{
+		{"filled", board{
 			{"X", "_", "X"},
 			{"O", "X", "O"},
 			{"X", "_", "O"},
 		}, cell{0, 0}, true},
-		{"empty", grid{
+		{"empty", board{
 			{"X", "_", "X"},
 			{"O", "_", "O"},
 			{"X", "_", "O"},
@@ -26,24 +26,24 @@ func Test_grid_isFilled(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.b.isFilled(tt.args); got != tt.want {
-				t.Errorf("grid.isFilled() = %v, want %v", got, tt.want)
+				t.Errorf("board.isFilled() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func Test_grid_hasEmpty(t *testing.T) {
+func Test_board_hasEmpty(t *testing.T) {
 	tests := []struct {
 		name string
-		b    grid
+		b    board
 		want bool
 	}{
-		{"has empty", grid{
+		{"has empty", board{
 			{"X", "_", "X"},
 			{"O", "_", "O"},
 			{"X", "_", "O"},
 		}, true},
-		{"all filled", grid{
+		{"all filled", board{
 			{"X", "O", "X"},
 			{"O", "X", "O"},
 			{"O", "X", "O"},
@@ -52,35 +52,35 @@ func Test_grid_hasEmpty(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.b.hasEmpty(); got != tt.want {
-				t.Errorf("grid.hasEmpty() = %v, want %v", got, tt.want)
+				t.Errorf("board.hasEmpty() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func Test_grid_isWinner(t *testing.T) {
+func Test_board_isWinner(t *testing.T) {
 	tests := []struct {
 		name string
-		b    grid
+		b    board
 		arg  string
 		want bool
 	}{
-		{"first row, X", grid{
+		{"first row, X", board{
 			{"X", "X", "X"},
 			{"O", "_", "_"},
 			{"O", "_", "_"},
 		}, "X", true},
-		{"last col, O", grid{
+		{"last col, O", board{
 			{"X", "X", "O"},
 			{"_", "_", "O"},
 			{"_", "_", "O"},
 		}, "O", true},
-		{"left diagonal, O", grid{
+		{"left diagonal, O", board{
 			{"X", "X", "O"},
 			{"_", "O", "_"},
 			{"O", "_", "_"},
 		}, "O", true},
-		{"draw", grid{
+		{"draw", board{
 			{"X", "O", "O"},
 			{"O", "X", "X"},
 			{"O", "X", "O"},
@@ -89,32 +89,32 @@ func Test_grid_isWinner(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.b.isWinner(tt.arg); got != tt.want {
-				t.Errorf("grid.isWinner() = %v, want %v", got, tt.want)
+				t.Errorf("board.isWinner() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func Test_grid_setCell(t *testing.T) {
+func Test_board_setCell(t *testing.T) {
 	type args struct {
 		c      cell
 		player string
 	}
 	tests := []struct {
 		name string
-		b    *grid
+		b    *board
 		args args
-		want *grid
+		want *board
 	}{
 		{
 			"1,1",
-			&grid{
+			&board{
 				{"_", "_", "_"},
 				{"_", "_", "_"},
 				{"_", "_", "_"},
 			},
 			args{toCell("5"), "X"},
-			&grid{
+			&board{
 				{"_", "_", "_"},
 				{"_", "X", "_"},
 				{"_", "_", "_"},
@@ -125,7 +125,7 @@ func Test_grid_setCell(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.b.setCell(tt.args.c, tt.args.player)
 			if !reflect.DeepEqual(tt.b, tt.want) {
-				t.Errorf("grid.setCell() = %v, want %v", tt.b, tt.want)
+				t.Errorf("board.setCell() = %v, want %v", tt.b, tt.want)
 			}
 		})
 	}

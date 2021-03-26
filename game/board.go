@@ -2,48 +2,69 @@ package game
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
-// Grid
+// Key
 
-type grid [3][3]mark
+type key = string
+
+func isKey(k key) bool {
+	n, err := strconv.Atoi(k)
+	if err != nil {
+		return false
+	}
+	return n >= 1 && n <= 9
+}
+
+// Cell
 
 type cell struct {
 	row, col int
 }
 
-func (b grid) String() string {
-	var rows []mark
-	for _, row := range b {
-		s := strings.Join(row[:], " ")
-		rows = append(rows, s)
-	}
-	return strings.Join(rows, "\n")
-}
-
-func (b *grid) setCell(c cell, m mark) {
-	b[c.row][c.col] = m
-}
-
-func toCell(key string) cell {
-	m := map[string]cell{
+func toCell(k key) cell {
+	coords := map[key]cell{
 		"1": {0, 0}, "2": {0, 1}, "3": {0, 2},
 		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
 		"7": {2, 0}, "8": {2, 1}, "9": {2, 2},
 	}
-	return m[key] // TODO: detect and propagate errors?
+	return coords[k] // TODO: detect and propagate errors?
 }
 
-func (b grid) isFilled(c cell) bool {
-	v := b[c.row][c.col]
-	return v != "_"
-}
+// Board
 
-func (b grid) hasEmpty() bool {
+const _blank = "_"
+
+type (
+	mark  = string // to avoid conversions
+	board [3][3]mark
+)
+
+func (b board) String() string {
+	var dump []string
 	for _, row := range b {
-		for _, v := range row {
-			if v == "_" {
+		s := strings.Join(row[:], " ")
+		dump = append(dump, s)
+	}
+	return strings.Join(dump, "\n")
+}
+
+// Private
+
+func (b *board) setCell(c cell, m mark) {
+	b[c.row][c.col] = m
+}
+
+func (b board) isFilled(c cell) bool {
+	return b[c.row][c.col] != _blank
+}
+
+func (b board) hasEmpty() bool {
+	for _, row := range b {
+		for _, m := range row {
+			if m == _blank {
 				return true
 			}
 		}
@@ -51,7 +72,7 @@ func (b grid) hasEmpty() bool {
 	return false
 }
 
-func (b grid) isWinner(m mark) bool {
+func (b board) isWinner(m mark) bool {
 	// Something better needed, too naive
 
 	// Horizontal
@@ -73,7 +94,9 @@ func (b grid) isWinner(m mark) bool {
 
 // IO
 
-func (b grid) print() {
+func (b board) print() {
+	var _ fmt.Stringer = board{}
+
 	fmt.Println()
 	fmt.Println()
 	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")

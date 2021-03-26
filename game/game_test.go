@@ -90,7 +90,7 @@ func TestLoop(t *testing.T) {
 	tests := []struct {
 		name  string
 		read  reader
-		want  grid
+		want  board
 		want1 bool
 	}{
 		{"O: 1, X: 2",
@@ -102,7 +102,7 @@ func TestLoop(t *testing.T) {
 				f = !f
 				return "2"
 			},
-			grid{
+			board{
 				{"O", "X", "_"},
 				{"_", "_", "_"},
 				{"_", "_", "_"},
@@ -118,7 +118,7 @@ func TestLoop(t *testing.T) {
 				f = !f
 				return "4"
 			},
-			grid{
+			board{
 				{"O", "X", "O"},
 				{"X", "_", "_"},
 				{"_", "_", "_"},
@@ -133,7 +133,7 @@ func TestLoop(t *testing.T) {
 				f = !f
 				return "6"
 			},
-			grid{
+			board{
 				{"O", "X", "O"},
 				{"X", "O", "X"},
 				{"_", "_", "_"},
@@ -141,7 +141,7 @@ func TestLoop(t *testing.T) {
 			true},
 		{"O: 7",
 			func() string { return "7" },
-			grid{
+			board{
 				{"O", "X", "O"},
 				{"X", "O", "X"},
 				{"O", "_", "_"},
@@ -153,7 +153,7 @@ func TestLoop(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := Loop(tt.read)
+			got, got1, _ := Loop(tt.read)
 			// assert.Equal is for verbose output
 			if !assert.Equal(t, tt.want, got) {
 				t.Errorf("Loop() got = %v, want %v", got, tt.want)
