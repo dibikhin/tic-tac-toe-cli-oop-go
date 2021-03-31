@@ -113,7 +113,7 @@ func Test_board_setCell(t *testing.T) {
 				{"_", "_", "_"},
 				{"_", "_", "_"},
 			},
-			args{toCell("5"), "X"},
+			args{key("5").toCell(), "X"},
 			&board{
 				{"_", "_", "_"},
 				{"_", "X", "_"},

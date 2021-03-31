@@ -38,7 +38,7 @@ func Test_arrange(t *testing.T) {
 func Test_isKey(t *testing.T) {
 	tests := []struct {
 		name string
-		arg  string
+		arg  key
 		want bool
 	}{
 		{"empty", "", false},
@@ -51,7 +51,7 @@ func Test_isKey(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isKey(tt.arg); got != tt.want {
+			if got := tt.arg.isKey(); got != tt.want {
 				t.Errorf("isKey() = %v, want %v", got, tt.want)
 			}
 		})
@@ -61,7 +61,7 @@ func Test_isKey(t *testing.T) {
 func Test_toCell(t *testing.T) {
 	tests := []struct {
 		name  string
-		arg   string
+		arg   key
 		want  int
 		want1 int
 	}{
@@ -72,7 +72,7 @@ func Test_toCell(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := toCell(tt.arg)
+			c := tt.arg.toCell()
 			if c.row != tt.want {
 				t.Errorf("pos() got = %v, want %v", c.row, tt.want)
 			}

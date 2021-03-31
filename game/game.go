@@ -25,12 +25,10 @@ func (p player) String() string {
 	return fmt.Sprintf(`Player %v ("%v")`, p.num, p.mark)
 }
 
-func arrange(m mark) (player, player) {
-	if strings.ToLower(m) == "x" {
-		return player{"X", 1}, player{"O", 2}
-	} else {
-		return player{"O", 1}, player{"X", 2}
-	}
+// Private
+
+func prompt(s fmt.Stringer) {
+	fmt.Printf("%v, your turn: ", s)
 }
 
 // Private package state.
@@ -40,9 +38,9 @@ func arrange(m mark) (player, player) {
 var (
 	_ready = false
 
-	_logo  board
-	_board board
+	_logo board
 
+	_board   board
 	_player1 player
 	_player2 player
 
@@ -55,8 +53,10 @@ var (
 // The `read` param is a strategy to prevent mocking
 func Setup(read reader) {
 	_logo, _board, _scanner = _init()
+
 	printLogo(_logo)
-	_player1, _player2 = setupGame(read, _board)
+	_player1, _player2 = setupPlayers(read)
+	printGame(_player1, _player2, _board)
 
 	_ready = true
 }
@@ -76,20 +76,19 @@ func Loop(read reader) (board, bool, error) {
 	return _board, more, nil
 }
 
-// IO
-
 // Read gets players's input and returns it as a text.
 // It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
+// (IO)
 func Read() string {
 	_scanner.Scan()
 	return strings.TrimSpace(_scanner.Text())
 
-	// TODO have to check and propagate _scanner.Err() ?
+	// TODO: have to check and propagate _scanner.Err() ?
 }
 
 // Private
 
-// Setup
+// Setup()
 
 func _init() (board, board, *bufio.Scanner) {
 	logo := board{
@@ -106,21 +105,37 @@ func _init() (board, board, *bufio.Scanner) {
 	return logo, board, scanner
 }
 
-func setupGame(read reader, b board) (player, player) {
+func printLogo(s fmt.Stringer) {
+	fmt.Println()
+	fmt.Println(s)
+	fmt.Println()
+}
+
+func setupPlayers(read reader) (player, player) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 	mark1 := read()
 	p1, p2 := arrange(mark1)
+	return p1, p2
+}
 
+func printGame(p1 fmt.Stringer, p2 fmt.Stringer, b board) {
 	fmt.Println()
+
 	fmt.Println(p1)
 	fmt.Println(p2)
 
 	b.print()
-
-	return p1, p2
 }
 
-// Game
+func arrange(m mark) (player, player) {
+	if strings.ToLower(m) == "x" {
+		return player{"X", 1}, player{"O", 2}
+	} else {
+		return player{"O", 1}, player{"X", 2}
+	}
+}
+
+// Game loop
 
 func turn(them player, read reader, board *board) bool {
 	prompt(them)
@@ -143,14 +158,14 @@ func turn(them player, read reader, board *board) bool {
 func inputLoop(read reader, pers player, board *board) cell {
 	var cel cell
 	for {
-		turn := read()
-		if !isKey(turn) {
+		turn := key(read())
+		if !turn.isKey() {
 			board.print()
 			prompt(pers)
 
 			continue
 		}
-		cel = toCell(turn)
+		cel = turn.toCell()
 		if board.isFilled(cel) {
 			board.print()
 			prompt(pers)
@@ -160,16 +175,4 @@ func inputLoop(read reader, pers player, board *board) cell {
 		break
 	}
 	return cel
-}
-
-// IO
-
-func printLogo(s fmt.Stringer) {
-	fmt.Println()
-	fmt.Println(s)
-	fmt.Println()
-}
-
-func prompt(s fmt.Stringer) {
-	fmt.Printf("%v, your turn: ", s)
 }
