@@ -1,5 +1,5 @@
 // Package Game implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet)
-// Players choose their mark, put them, the game checks the winner or draw
+// Players choose their marks, put them, the game checks winner or draw
 package game
 
 import (
@@ -9,10 +9,6 @@ import (
 	"os"
 	"strings"
 )
-
-// Game types
-
-type reader func() string
 
 // Player
 
@@ -25,63 +21,68 @@ func (p player) String() string {
 	return fmt.Sprintf(`Player %v ("%v")`, p.num, p.mark)
 }
 
-// Private
-
 func prompt(s fmt.Stringer) {
 	fmt.Printf("%v, your turn: ", s)
+}
+
+// Game types
+
+type reader func() string
+
+type game struct {
+	isReady bool
+
+	logo board
+
+	board   board
+	player1 player
+	player2 player
+
+	scanner *bufio.Scanner
 }
 
 // Private package state.
 // It's here to simplify dependency injection.
 // There was no need to expose the private state as context.
+var _game game
 
-var (
-	_ready = false
-
-	_logo board
-
-	_board   board
-	_player1 player
-	_player2 player
-
-	_scanner *bufio.Scanner
-)
+var ErrCouldNotStart = errors.New("couldn't start, set up the game first")
 
 // Public
 
-// Setup initialized the game and helps players to choose mark.
+// Setup initializes the game and helps players to choose marks.
 // The `read` param is a strategy to prevent mocking
 func Setup(read reader) {
-	_logo, _board, _scanner = _init()
+	_game = *newGame()
 
-	printLogo(_logo)
-	_player1, _player2 = setupPlayers(read)
-	printGame(_player1, _player2, _board)
+	printLogo(_game.logo)
+	_game.player1, _game.player2 = chooseMarks(read)
+	printGame(_game)
 
-	_ready = true
+	_game.isReady = true
 }
 
 // Loop prompts players to take turns.
 // The `read` param is a strategy to prevent mocking
 // The `board` is returned for tests only
 func Loop(read reader) (board, bool, error) {
-	if !_ready {
-		return _board, false, errors.New("setup failed")
+	if !_game.isReady {
+		return _game.board, false, ErrCouldNotStart
 	}
-	more := turn(_player1, read, &_board)
+	more := turn(_game.player1, read, &_game.board)
 	if !more {
-		return _board, false, nil
+		return _game.board, false, nil
 	}
-	more = turn(_player2, read, &_board)
-	return _board, more, nil
+	more = turn(_game.player2, read, &_game.board)
+	return _game.board, more, nil
 }
 
 // Read gets players's input and returns it as a text.
 // It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
 // (IO)
 func Read() string {
-	_scanner.Scan()
-	return strings.TrimSpace(_scanner.Text())
+	_game.scanner.Scan()
+	return strings.TrimSpace(_game.scanner.Text())
 
 	// TODO: have to check and propagate _scanner.Err() ?
 }
@@ -90,41 +91,42 @@ func Read() string {
 
 // Setup()
 
-func _init() (board, board, *bufio.Scanner) {
-	logo := board{
-		{"X", " ", "X"},
-		{"O", "X", "O"},
-		{"X", " ", "O"},
+func newGame() *game {
+	return &game{
+		logo: board{
+			{"X", " ", "X"},
+			{"O", "X", "O"},
+			{"X", " ", "O"}},
+		board: board{
+			{_blank, _blank, _blank}, {_blank, _blank, _blank}, {_blank, _blank, _blank}},
+		scanner: bufio.NewScanner(os.Stdin),
 	}
-	board := board{
-		{_blank, _blank, _blank},
-		{_blank, _blank, _blank},
-		{_blank, _blank, _blank},
-	}
-	scanner := bufio.NewScanner(os.Stdin)
-	return logo, board, scanner
 }
 
 func printLogo(s fmt.Stringer) {
 	fmt.Println()
 	fmt.Println(s)
 	fmt.Println()
+
+	fmt.Println("(Use `ctrl+c` to exit)")
+	fmt.Println()
+
 }
 
-func setupPlayers(read reader) (player, player) {
+func chooseMarks(read reader) (player, player) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 	mark1 := read()
 	p1, p2 := arrange(mark1)
 	return p1, p2
 }
 
-func printGame(p1 fmt.Stringer, p2 fmt.Stringer, b board) {
+func printGame(g game) {
 	fmt.Println()
 
-	fmt.Println(p1)
-	fmt.Println(p2)
+	fmt.Println(g.player1)
+	fmt.Println(g.player2)
 
-	b.print()
+	g.board.print()
 }
 
 func arrange(m mark) (player, player) {

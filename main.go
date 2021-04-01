@@ -16,7 +16,7 @@ func main() {
 
 	_, more, err := game.Loop(game.Read)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "Error: %v.\n", err)
 		os.Exit(1)
 	}
 	for more {
