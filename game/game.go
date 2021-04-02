@@ -21,8 +21,22 @@ func (p player) String() string {
 	return fmt.Sprintf(`Player %v ("%v")`, p.num, p.mark)
 }
 
+// Player IO
+
 func prompt(s fmt.Stringer) {
 	fmt.Printf("%v, your turn: ", s)
+}
+
+func (b board) print() {
+	var _ fmt.Stringer = board{}
+
+	fmt.Println()
+	fmt.Println()
+	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
+	fmt.Println()
+
+	fmt.Println(b)
+	fmt.Println()
 }
 
 // Game types
@@ -110,7 +124,6 @@ func printLogo(s fmt.Stringer) {
 
 	fmt.Println("(Use `ctrl+c` to exit)")
 	fmt.Println()
-
 }
 
 func chooseMarks(read reader) (player, player) {

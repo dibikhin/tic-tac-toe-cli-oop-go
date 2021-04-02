@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -90,18 +89,4 @@ func (b board) isWinner(m mark) bool {
 	d1 := b[0][2] == m && b[1][1] == m && b[2][0] == m
 
 	return h0 || h1 || h2 || v0 || v1 || v2 || d0 || d1
-}
-
-// IO
-
-func (b board) print() {
-	var _ fmt.Stringer = board{}
-
-	fmt.Println()
-	fmt.Println()
-	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
-	fmt.Println()
-
-	fmt.Println(b)
-	fmt.Println()
 }
