@@ -14,12 +14,12 @@ func main() {
 
 	game.Setup(game.Read)
 
-	_, more, err := game.Loop(game.Read)
+	_, more, err := game.Loop()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v.\n", err)
 		os.Exit(1)
 	}
 	for more {
-		_, more, _ = game.Loop(game.Read)
+		_, more, _ = game.Loop()
 	}
 }

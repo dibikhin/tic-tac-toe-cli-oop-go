@@ -53,6 +53,7 @@ type game struct {
 	player2 player
 
 	scanner *bufio.Scanner
+	reader  reader
 }
 
 // Private package state.
@@ -65,7 +66,7 @@ var ErrCouldNotStart = errors.New("couldn't start, set up the game first")
 // Public
 
 // Setup initializes the game and helps players to choose marks.
-// The `read` param is a strategy to prevent mocking
+// The `read` param is a strategy for user input to prevent mocking
 func Setup(read reader) {
 	_game = *newGame()
 
@@ -73,26 +74,28 @@ func Setup(read reader) {
 	_game.player1, _game.player2 = chooseMarks(read)
 	printGame(_game)
 
+	_game.reader = read
+
 	_game.isReady = true
 }
 
 // Loop prompts players to take turns.
-// The `read` param is a strategy to prevent mocking
 // The `board` is returned for tests only
-func Loop(read reader) (board, bool, error) {
+func Loop() (board, bool, error) {
 	if !_game.isReady {
 		return _game.board, false, ErrCouldNotStart
 	}
-	more := turn(_game.player1, read, &_game.board)
+	more := turn(_game.player1, _game.reader, &_game.board)
 	if !more {
 		return _game.board, false, nil
 	}
-	more = turn(_game.player2, read, &_game.board)
+	more = turn(_game.player2, _game.reader, &_game.board)
 	return _game.board, more, nil
 }
 
 // Read gets players's input and returns it as a text.
-// It's a default impl of the `reader` Strategy. It's used for testing to prevent mocking.
+// It's a default impl of the `reader` Strategy. It's exposed to be used
+// for testing to prevent mocking.
 // (IO)
 func Read() string {
 	_game.scanner.Scan()
