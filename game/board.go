@@ -1,22 +1,9 @@
 package game
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
-
-// Key
-
-type key = string
-
-func isKey(k key) bool {
-	n, err := strconv.Atoi(k)
-	if err != nil {
-		return false
-	}
-	return n >= 1 && n <= 9
-}
 
 // Cell
 
@@ -24,7 +11,19 @@ type cell struct {
 	row, col int
 }
 
-func toCell(k key) cell {
+// Key
+
+type key string
+
+func (k key) isKey() bool {
+	n, err := strconv.Atoi(string(k))
+	if err != nil {
+		return false
+	}
+	return n >= 1 && n <= 9
+}
+
+func (k key) toCell() cell {
 	coords := map[key]cell{
 		"1": {0, 0}, "2": {0, 1}, "3": {0, 2},
 		"4": {1, 0}, "5": {1, 1}, "6": {1, 2},
@@ -90,18 +89,4 @@ func (b board) isWinner(m mark) bool {
 	d1 := b[0][2] == m && b[1][1] == m && b[2][0] == m
 
 	return h0 || h1 || h2 || v0 || v1 || v2 || d0 || d1
-}
-
-// IO
-
-func (b board) print() {
-	var _ fmt.Stringer = board{}
-
-	fmt.Println()
-	fmt.Println()
-	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
-	fmt.Println()
-
-	fmt.Println(b)
-	fmt.Println()
 }

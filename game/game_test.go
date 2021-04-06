@@ -1,6 +1,7 @@
 package game
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -38,7 +39,7 @@ func Test_arrange(t *testing.T) {
 func Test_isKey(t *testing.T) {
 	tests := []struct {
 		name string
-		arg  string
+		arg  key
 		want bool
 	}{
 		{"empty", "", false},
@@ -51,7 +52,7 @@ func Test_isKey(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isKey(tt.arg); got != tt.want {
+			if got := tt.arg.isKey(); got != tt.want {
 				t.Errorf("isKey() = %v, want %v", got, tt.want)
 			}
 		})
@@ -61,7 +62,7 @@ func Test_isKey(t *testing.T) {
 func Test_toCell(t *testing.T) {
 	tests := []struct {
 		name  string
-		arg   string
+		arg   key
 		want  int
 		want1 int
 	}{
@@ -72,7 +73,7 @@ func Test_toCell(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := toCell(tt.arg)
+			c := tt.arg.toCell()
 			if c.row != tt.want {
 				t.Errorf("pos() got = %v, want %v", c.row, tt.want)
 			}
@@ -86,38 +87,25 @@ func Test_toCell(t *testing.T) {
 func TestLoop(t *testing.T) {
 	// NOTE: intentionally kept dirty to lower maintenance
 
-	f := true
+	c := -2 // WARN: editing this can hang up this test
+	// -2 is ignored; -1 is for testing wrong input; 0 is for choosing player; 1..7 are for players turns
+	reader := func() string {
+		c++
+		return strconv.Itoa(c)
+	}
 	tests := []struct {
 		name  string
-		read  reader
-		want  board
-		want1 bool
+		board board
+		more  bool
 	}{
 		{"O: 1, X: 2",
-			func() string {
-				if f {
-					f = !f
-					return "1"
-				}
-				f = !f
-				return "2"
-			},
 			board{
 				{"O", "X", "_"},
 				{"_", "_", "_"},
 				{"_", "_", "_"},
 			},
 			true},
-
 		{"O: 3, X: 4",
-			func() string {
-				if f {
-					f = !f
-					return "3"
-				}
-				f = !f
-				return "4"
-			},
 			board{
 				{"O", "X", "O"},
 				{"X", "_", "_"},
@@ -125,14 +113,6 @@ func TestLoop(t *testing.T) {
 			},
 			true},
 		{"O: 5, X: 6",
-			func() string {
-				if f {
-					f = !f
-					return "5"
-				}
-				f = !f
-				return "6"
-			},
 			board{
 				{"O", "X", "O"},
 				{"X", "O", "X"},
@@ -140,7 +120,6 @@ func TestLoop(t *testing.T) {
 			},
 			true},
 		{"O: 7",
-			func() string { return "7" },
 			board{
 				{"O", "X", "O"},
 				{"X", "O", "X"},
@@ -149,17 +128,17 @@ func TestLoop(t *testing.T) {
 			false},
 	}
 
-	Setup(func() string { return "o" }) // NOTE
+	Setup(reader) // NOTE: setting up is mandatory
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, _ := Loop(tt.read)
+			got, got1, _ := Loop()
 			// assert.Equal is for verbose output
-			if !assert.Equal(t, tt.want, got) {
-				t.Errorf("Loop() got = %v, want %v", got, tt.want)
+			if !assert.Equal(t, tt.board, got) {
+				t.Errorf("Loop() got = %v, want %v", got, tt.board)
 			}
-			if got1 != tt.want1 {
-				t.Errorf("Loop() got1 = %v, want %v", got1, tt.want1)
+			if got1 != tt.more {
+				t.Errorf("Loop() got1 = %v, want %v", got1, tt.more)
 			}
 		})
 	}
