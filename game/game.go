@@ -1,4 +1,4 @@
-// Package Game implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet)
+// Package game implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet)
 // Players choose their marks, put them, the game checks winner or draw
 package game
 
@@ -10,73 +10,68 @@ import (
 	"strings"
 )
 
-// Player
+// ErrCouldNotStart arises when `Loop()` is run without running `Setup()` first
+var ErrCouldNotStart = errors.New("couldn't start, set up the game first")
 
-type player struct {
-	mark mark
-	num  int
+// ErrNilReader arises when `Setup()` is run with nil reader
+var ErrNilReader = errors.New("reader is nil, pass the default reader at least")
+
+type (
+	reader func() string
+
+	game struct {
+		isReady bool
+
+		logo board
+
+		board   board
+		player1 player
+		player2 player
+
+		scanner *bufio.Scanner
+		reader  reader
+	}
+)
+
+func newGame(read reader) *game {
+	return &game{
+		logo: board{
+			{"X", " ", "X"},
+			{"O", "X", "O"},
+			{"X", " ", "O"}},
+		board: board{
+			{_blank, _blank, _blank}, {_blank, _blank, _blank}, {_blank, _blank, _blank}},
+		scanner: bufio.NewScanner(os.Stdin),
+		reader:  read,
+	}
 }
 
-func (p player) String() string {
-	return fmt.Sprintf(`Player %v ("%v")`, p.num, p.mark)
-}
-
-// Player IO
-
-func prompt(s fmt.Stringer) {
-	fmt.Printf("%v, your turn: ", s)
-}
-
-func (b board) print() {
-	var _ fmt.Stringer = board{}
-
-	fmt.Println()
-	fmt.Println()
-	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
-	fmt.Println()
-
-	fmt.Println(b)
-	fmt.Println()
-}
-
-// Game types
-
-type reader func() string
-
-type game struct {
-	isReady bool
-
-	logo board
-
-	board   board
-	player1 player
-	player2 player
-
-	scanner *bufio.Scanner
-	reader  reader
+func (g *game) setPlayers(p1, p2 player) {
+	g.player1 = p1
+	g.player2 = p2
+	g.isReady = true
 }
 
 // Private package state.
 // It's here to simplify dependency injection.
 // There was no need to expose the private state as context.
-var _game game
-
-var ErrCouldNotStart = errors.New("couldn't start, set up the game first")
+var _game *game
 
 // Public
 
 // Setup initializes the game and helps players to choose marks.
 // The `read` param is a strategy for user input to prevent mocking
-func Setup(read reader) {
-	_game = *newGame()
-
+func Setup(read reader) error {
+	if read == nil {
+		return ErrNilReader
+	}
+	_game = newGame(read)
 	printLogo(_game.logo)
-	_game.player1, _game.player2 = chooseMarks(read)
-	printGame(_game)
 
-	_game.reader = read
+	_game.setPlayers(chooseMarks(read))
+	printGame(*_game)
 
-	_game.isReady = true
+	return nil
 }
 
 // Loop prompts players to take turns.
@@ -106,19 +101,7 @@ func Read() string {
 
 // Private
 
-// Setup()
-
-func newGame() *game {
-	return &game{
-		logo: board{
-			{"X", " ", "X"},
-			{"O", "X", "O"},
-			{"X", " ", "O"}},
-		board: board{
-			{_blank, _blank, _blank}, {_blank, _blank, _blank}, {_blank, _blank, _blank}},
-		scanner: bufio.NewScanner(os.Stdin),
-	}
-}
+// Setup() IO
 
 func printLogo(s fmt.Stringer) {
 	fmt.Println()
@@ -145,15 +128,16 @@ func printGame(g game) {
 	g.board.print()
 }
 
+// Other
+
 func arrange(m mark) (player, player) {
 	if strings.ToLower(m) == "x" {
 		return player{"X", 1}, player{"O", 2}
-	} else {
-		return player{"O", 1}, player{"X", 2}
 	}
+	return player{"O", 1}, player{"X", 2}
 }
 
-// Game loop
+// Game Loop()
 
 func turn(them player, read reader, board *board) bool {
 	prompt(them)

@@ -12,8 +12,11 @@ import (
 func main() {
 	fmt.Println("Hey! This is 3x3 Tic-tac-toe for 2 friends :)")
 
-	game.Setup(game.Read)
-
+	err := game.Setup(game.Read)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v.\n", err)
+		os.Exit(1)
+	}
 	_, more, err := game.Loop()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v.\n", err)
