@@ -2,11 +2,7 @@
 
 3x3 Tic-tac-toe for 2 friends (cannot play w/ computer yet).
 
-[![GoReportCard example](https://goreportcard.com/badge/github.com/dibikhin/tic-tac-toe-go)](https://goreportcard.com/report/github.com/dibikhin/tic-tac-toe-go)
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/maintainability)](https://codeclimate.com/github/dibikhin/tic-tac-toe-go/maintainability)
-
-[![Test Coverage](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/test_coverage)](https://codeclimate.com/github/dibikhin/tic-tac-toe-go/test_coverage)
+[![GoReportCard example](https://goreportcard.com/badge/github.com/dibikhin/tic-tac-toe-go)](https://goreportcard.com/report/github.com/dibikhin/tic-tac-toe-go) [![Maintainability](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/maintainability)](https://codeclimate.com/github/dibikhin/tic-tac-toe-go/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/test_coverage)](https://codeclimate.com/github/dibikhin/tic-tac-toe-go/test_coverage)
 
 ## Getting Started
 
