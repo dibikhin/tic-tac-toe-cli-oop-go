@@ -4,12 +4,12 @@ import (
 	"strings"
 )
 
-const _blank = "_"
-
 type (
 	mark  = string // to avoid conversions
 	board [3][3]mark
 )
+
+const _blank = "_"
 
 func (b board) String() string {
 	var dump []string
@@ -26,10 +26,12 @@ func (b *board) setCell(c cell, m mark) {
 	b[c.row][c.col] = m
 }
 
+// Pure
 func (b board) isFilled(c cell) bool {
 	return b[c.row][c.col] != _blank
 }
 
+// Pure
 func (b board) hasEmpty() bool {
 	for _, row := range b {
 		for _, m := range row {
@@ -41,6 +43,7 @@ func (b board) hasEmpty() bool {
 	return false
 }
 
+// Pure
 func (b board) isWinner(m mark) bool {
 	// Something better needed, too naive
 
@@ -61,4 +64,4 @@ func (b board) isWinner(m mark) bool {
 	return h0 || h1 || h2 || v0 || v1 || v2 || d0 || d1
 }
 
-// No IO allowed in this file due for SRP
+// No IO allowed in this file for SRP

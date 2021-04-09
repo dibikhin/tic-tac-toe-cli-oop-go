@@ -128,7 +128,7 @@ func TestLoop(t *testing.T) {
 			false},
 	}
 
-	Setup(reader) // NOTE: setting up is mandatory
+	_ = Setup(reader) // NOTE: setting up is mandatory
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
