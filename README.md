@@ -1,8 +1,12 @@
 # Tic-tac-toe
 
-3x3 Tic-tac-toe for 2 friends (cannot play w/ computer yet).
+Classic 3x3 Tic-tac-toe for 2 friends to play locally in terminal.
 
 [![GoReportCard example](https://goreportcard.com/badge/github.com/dibikhin/tic-tac-toe-go)](https://goreportcard.com/report/github.com/dibikhin/tic-tac-toe-go) [![Maintainability](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/maintainability)](https://codeclimate.com/github/dibikhin/tic-tac-toe-go/maintainability) [![example branch parameter](https://github.com/dibikhin/tic-tac-toe-go/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/dibikhin/tic-tac-toe-go/actions/workflows/go.yml)
+
+# Overview
+
+Get someone and play locally in your terminal using keyboard only. Cannot play w/ computer yet so can play with yourself at worst :)
 
 ## Getting Started
 
@@ -41,8 +45,29 @@ $ clear && go run main.go
 
 NOTE: Hit `ctrl+c` to exit.
 
+## Internals
+- The 3x3 size is hardcoded
+- The UI is CLI
+- No timeouts for turns
+- Dirty input tolerant
+
+### Technical
+- The game is one active app (no client/server)
+- A basic DI is inside
+  - basic IoC in `main.go` — the `Read()` strategy
+  - no mocks
+  - inner DI in `loop.go`
+- Well-tested
+- ~90% code coverage
+- IO extracted but not isolated
+
 ## Project Structure
 - `/game` — The game package
+- `|-board.go`
+- `|-game.go`
+- `|-key.go`
+- `|-loop.go`
+- `|-player.go`
 - `main.go` — Entry point
 
 ## Authors
