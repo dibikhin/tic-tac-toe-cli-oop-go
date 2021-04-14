@@ -1,10 +1,10 @@
 # Tic-tac-toe
 
-Classic 3x3 Tic-tac-toe for 2 friends to play locally in terminal.
+A console 3x3 Tic-tac-toe for 2 friends.
 
 [![GoReportCard example](https://goreportcard.com/badge/github.com/dibikhin/tic-tac-toe-go)](https://goreportcard.com/report/github.com/dibikhin/tic-tac-toe-go) [![Maintainability](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/maintainability)](https://codeclimate.com/github/dibikhin/tic-tac-toe-go/maintainability) [![example branch parameter](https://github.com/dibikhin/tic-tac-toe-go/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/dibikhin/tic-tac-toe-go/actions/workflows/go.yml)
 
-# Overview
+## How to
 
 Get someone and play locally in your terminal using keyboard only. Cannot play w/ computer yet so can play with yourself at worst :)
 
@@ -46,22 +46,8 @@ $ clear && go run main.go
 NOTE: Hit `ctrl+c` to exit.
 
 ## Internals
-- The 3x3 size is hardcoded
-- The UI is CLI
-- No timeouts for turns
-- Dirty input tolerant
 
-### Technical
-- The game is one active app (no client/server)
-- A basic DI is inside
-  - basic IoC in `main.go` — the `Read()` strategy
-  - no mocks
-  - inner DI in `loop.go`
-- Well-tested
-- ~90% code coverage
-- IO extracted but not isolated
-
-## Project Structure
+### Project Structure
 - `/game` — The game package
 - `|-board.go`
 - `|-game.go`
@@ -70,11 +56,30 @@ NOTE: Hit `ctrl+c` to exit.
 - `|-player.go`
 - `main.go` — Entry point
 
+### Overview
+- The UI is CLI
+- The 3x3 size is hardcoded
+- No timeouts for turns
+- Dirty input tolerant
+
+### Technical
+- The game is one active app (no client/server)
+- A basic DI is under the hood (naive, no too smart DI)
+  - basic IoC in `main.go` — the `Read()` strategy
+  - inner DI in the game loop (`loop.go`, not exposed for simplicity)
+- Well-tested
+  - no mocks
+  - ~90% code coverage
+  - pure and atomic fns mainly (no IO tests)
+  - NOTE: The tests play the game itself too. See in the end after expanding the `Test` section of [the Github Actions job 'build'](https://github.com/dibikhin/tic-tac-toe-go/runs/2290602609?check_suite_focus=true)
+- A lot of pure fns; IO extracted but not isolated
+
+
 ## Authors
 - [Roman Dibikhin](https://github.com/dibikhin)
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
 
 ## Acknowledgments
 Thanks to:
