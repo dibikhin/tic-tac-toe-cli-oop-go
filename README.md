@@ -64,9 +64,12 @@ NOTE: Hit `ctrl+c` to exit.
 
 ### Technical
 - The game is one active app (no client/server)
-- A basic DI is under the hood (naive, no too smart DI)
-  - basic IoC in `main.go` — the `Read()` strategy
-  - inner DI in the game loop (`loop.go`, not exposed for simplicity)
+  - Simple but structured
+  - Zero dependencies
+  - No patterns overkill
+- A basic DI is under the hood for auto-tests (naive, no too smart DI)
+  - a simple IoC in `main.go` — the `Read()` strategy
+  - an inner DI in the game loop (`loop.go`, not exposed for simplicity)
 - Well-tested
   - no mocks
   - ~90% code coverage

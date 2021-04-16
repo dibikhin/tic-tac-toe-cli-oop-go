@@ -1,4 +1,4 @@
-// Package game implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet)
+// Package game implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet).
 // Players choose their marks, put them, the game checks winner or draw.
 package game
 
@@ -70,9 +70,7 @@ func Loop() (board, bool, error) {
 // Private
 
 func turn(them player, read reader, board *board) bool {
-	prompt(them)
-
-	c := inputLoop(read, them, board)
+	c := inputLoop(read, them, *board)
 	board.setCell(c, them.mark)
 	board.print()
 
@@ -87,8 +85,8 @@ func turn(them player, read reader, board *board) bool {
 	return true
 }
 
-func inputLoop(read reader, pers player, board *board) cell {
-	var cel cell
+func inputLoop(read reader, pers player, board board) cell {
+	prompt(pers)
 	for {
 		turn := key(read())
 		if !turn.isKey() {
@@ -97,14 +95,13 @@ func inputLoop(read reader, pers player, board *board) cell {
 
 			continue
 		}
-		cel = turn.toCell()
+		cel := turn.toCell()
 		if board.isFilled(cel) {
 			board.print()
 			prompt(pers)
 
 			continue
 		}
-		break
+		return cel
 	}
-	return cel
 }

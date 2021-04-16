@@ -22,6 +22,7 @@ func (b board) String() string {
 
 // Private
 
+// `b` is a pointer because modifications are expected
 func (b *board) setCell(c cell, m mark) {
 	b[c.row][c.col] = m
 }
