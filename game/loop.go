@@ -3,12 +3,12 @@
 package game
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 )
-
-type reader func() string
 
 // Constants
 var (
@@ -45,8 +45,11 @@ func Setup(read reader) error {
 // It's a default impl of the `reader` Strategy. It's exposed to be used
 // for testing to prevent mocking.
 func Read() string {
-	_game.scanner.Scan()
-	return strings.TrimSpace(_game.scanner.Text())
+	// NOTE: it's easier to create it in place on demand vs. to store
+	// and to initialize it somewhere. The `NewScanner` is very cheap inside actually
+	s := bufio.NewScanner(os.Stdin)
+	s.Scan()
+	return strings.TrimSpace(s.Text())
 
 	// TODO: have to check and propagate _scanner.Err() ?
 }
