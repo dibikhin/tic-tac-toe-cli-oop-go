@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"strconv"
 	"testing"
 
@@ -87,11 +88,16 @@ func Test_toCell(t *testing.T) {
 func TestLoop(t *testing.T) {
 	// NOTE: intentionally kept dirty to lower maintenance
 
-	c := -2 // WARN: editing this can hang up this test
-	// -2 is ignored; -1 is for testing wrong input; 0 is for choosing player; 1..7 are for players turns
+	// WARN: editing this can hang up this test
+	c := -2
+	// -2 is ignored;
+	// -1 is for testing wrong input;
+	// 0 is for choosing player; 1..7 are for players turns
 	reader := func() string {
 		c++
-		return strconv.Itoa(c)
+		x0 := strconv.Itoa(c)
+		fmt.Println(x0)
+		return x0
 	}
 	tests := []struct {
 		name  string

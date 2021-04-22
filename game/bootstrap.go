@@ -8,12 +8,12 @@ func PlayGame() error {
 	if err != nil {
 		return err
 	}
-	_, more, err := Loop()
-	if err != nil {
-		return err
-	}
+	more := true
 	for more {
-		_, more, _ = Loop()
+		_, more, err = Loop()
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

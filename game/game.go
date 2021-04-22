@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// User input strategy for mocking in tests.
+// User input strategy for stubbing in tests.
 //
 // NOTE: An interface is more idiomatic in this case. BUT it's overkill to define
 // a type with constructor, an interface and its fake implementation in tests vs. this
@@ -15,34 +15,46 @@ type reader func() string
 // Game
 
 type game struct {
-	isReady bool
-
 	logo board
 
 	board   board
 	player1 player
 	player2 player
 
-	reader reader
+	read reader
 }
 
 // Pure
-func newGame(read reader) *game {
+func newGame() *game {
 	return &game{
 		logo: board{
 			{"X", " ", "X"},
 			{"O", "X", "O"},
 			{"X", " ", "O"}},
 		board: board{
-			{_blank, _blank, _blank}, {_blank, _blank, _blank}, {_blank, _blank, _blank}},
-		reader: read,
+			{_blank, _blank, _blank},
+			{_blank, _blank, _blank},
+			{_blank, _blank, _blank}},
 	}
 }
 
+// Pure
+func (g game) isReady() bool {
+	return g.read != nil &&
+		g.player1 != player{} &&
+		g.player2 != player{} &&
+		g.board != board{}
+}
+
+func (g *game) setReader(read reader) {
+	// WARN: possible nil
+	g.read = read
+}
+
 func (g *game) setPlayers(p1, p2 player) {
+	// WARN: possible nil
 	g.player1 = p1
 	g.player2 = p2
-	g.isReady = true
 }
 
 // Setup() IO
@@ -56,20 +68,23 @@ func printLogo(s fmt.Stringer) {
 	fmt.Println()
 }
 
-func chooseMarks(read reader) (player, player) {
+func (g game) chooseMarks() (player, player) {
+	// WARN: possible nil
+
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
-	mark1 := read()
+	mark1 := g.read()
 	p1, p2 := arrange(mark1)
 	return p1, p2
 }
 
-func printGame(g game) {
+func (g game) print() {
+	// WARN: possible nil
 	fmt.Println()
 
 	fmt.Println(g.player1)
 	fmt.Println(g.player2)
 
-	g.board.print()
+	g.printBoard()
 }
 
 // Other

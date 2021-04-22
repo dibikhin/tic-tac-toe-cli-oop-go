@@ -13,18 +13,20 @@ func (p player) String() string {
 
 // IO
 
+// Implicit check for `fmt.Stringer` impl
 func prompt(s fmt.Stringer) {
 	fmt.Printf("%v, your turn: ", s)
 }
 
-func (b board) print() {
-	var _ fmt.Stringer = board{}
+func (g game) printBoard() {
+	// WARN: possible nil
+	var _ fmt.Stringer = g.board // Explicit check for fmt.Stringer
 
 	fmt.Println()
 	fmt.Println()
 	fmt.Println("Press 1 to 9 to mark an empty cell (5 is center), then press ENTER. Board:")
 	fmt.Println()
 
-	fmt.Println(b)
+	fmt.Println(g.board)
 	fmt.Println()
 }

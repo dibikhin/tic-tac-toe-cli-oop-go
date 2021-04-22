@@ -23,7 +23,7 @@ $ git clone https://github.com/dibikhin/tic-tac-toe-go.git
 ## Running the tests
 ```
 $ cd tic-tac-toe-go
-$ cd game
+$ cd game/
 $ go test -v
 ...
 >PASS
@@ -71,7 +71,7 @@ NOTE: Hit `ctrl+c` to exit.
   - a simple IoC in `main.go` — the `Read()` strategy
   - an inner DI in the game loop (`loop.go`, not exposed for simplicity)
 - Well-tested
-  - no mocks
+  - no mocks (behavior), just stubs (state)
   - ~90% code coverage
   - pure and atomic fns mainly (no IO tests)
   - NOTE: The tests play the game itself too. See in the end after expanding the `Test` section of [the Github Actions job 'build'](https://github.com/dibikhin/tic-tac-toe-go/runs/2290602609?check_suite_focus=true)
