@@ -13,10 +13,10 @@ import (
 // Constants, Private
 var (
 	// errCouldNotStart arises when `Loop()` is run without running `Setup()` first.
-	errCouldNotStart = errors.New("couldn't start the game loop, set up the game first")
+	errCouldNotStart = errors.New("game: couldn't start the game loop, set up the game first")
 
 	// errNilReader arises when `Setup()` is run with nil reader.
-	errNilReader = errors.New("the reader is nil, pass the default reader at least")
+	errNilReader = errors.New("game: the reader is nil, pass a non-nil reader or nothing for the default one")
 )
 
 // Private package state.
@@ -27,24 +27,30 @@ var _game *game
 // Public
 
 // Setup initializes the game and helps players to choose marks.
-// The `read` param is a strategy for user input to be stubbed.
-func Setup(read reader) error {
-	if read == nil {
-		return errNilReader
-	}
+// The param is a strategy for user input to be stubbed.
+// One can pass nothing, the default reader is used in the case.
+// It's a factory with IO.
+func Setup(rs ...reader) error {
 	_game = newGame()
+	_game.setReader(DefaultReader)
+
+	if len(rs) > 0 {
+		if rs[0] == nil {
+			return errNilReader
+		}
+		_game.setReader(rs[0])
+	}
 	printLogo(_game.logo)
 
-	_game.setReader(read)
 	_game.setPlayers(_game.chooseMarks())
 	_game.print()
 
 	return nil
 }
 
-// Read gets players's input and returns it as a text.
+// DefaultReader gets player's input and returns it as a text.
 // It's exposed as a default impl of the `reader` Strategy.
-func Read() string {
+func DefaultReader() string {
 	// NOTE: it's easier to create it in place on demand vs. to store
 	// and to initialize it somewhere. The `NewScanner` is very cheap inside actually
 	s := bufio.NewScanner(os.Stdin)

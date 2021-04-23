@@ -19,8 +19,8 @@ func prompt(s fmt.Stringer) {
 }
 
 func (g game) printBoard() {
-	// WARN: possible nil
-	var _ fmt.Stringer = g.board // Explicit check for fmt.Stringer
+	// Explicit check for fmt.Stringer
+	var _ fmt.Stringer = g.board
 
 	fmt.Println()
 	fmt.Println()

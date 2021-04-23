@@ -47,7 +47,7 @@ func (g game) isReady() bool {
 }
 
 func (g *game) setReader(read reader) {
-	// WARN: possible nil
+	// WARN: possible nils
 	g.read = read
 }
 
@@ -69,16 +69,15 @@ func printLogo(s fmt.Stringer) {
 }
 
 func (g game) chooseMarks() (player, player) {
-	// WARN: possible nil
-
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
+
+	// WARN: possible nil
 	mark1 := g.read()
 	p1, p2 := arrange(mark1)
 	return p1, p2
 }
 
 func (g game) print() {
-	// WARN: possible nil
 	fmt.Println()
 
 	fmt.Println(g.player1)

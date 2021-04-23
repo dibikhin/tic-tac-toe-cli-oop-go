@@ -30,6 +30,7 @@ func (b *board) setCell(c cell, m mark) {
 
 // Pure
 func (b board) isFilled(c cell) bool {
+	// WARN: possible out of range
 	return b[c.row][c.col] != _blank
 }
 
@@ -47,6 +48,8 @@ func (b board) hasEmpty() bool {
 
 // Pure
 func (b board) isWinner(m mark) bool {
+	// WARN: possible out of range
+
 	// Something better needed, too naive
 
 	// Horizontal

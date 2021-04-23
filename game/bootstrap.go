@@ -4,7 +4,7 @@ package game
 // It's a default bootstrapper.
 // Other public functions are exposed for testing purposes.
 func PlayGame() error {
-	err := Setup(Read)
+	err := Setup()
 	if err != nil {
 		return err
 	}
