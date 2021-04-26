@@ -29,16 +29,10 @@ var _game *game
 // Setup initializes the game and helps players to choose marks.
 // The param is a strategy for user input to be stubbed.
 // One can pass nothing, the default reader is used in the case.
-// It's a factory with IO.
 func Setup(rs ...reader) error {
-	_game = newGame()
-	_game.setReader(DefaultReader)
-
-	if len(rs) > 0 {
-		if rs[0] == nil {
-			return errNilReader
-		}
-		_game.setReader(rs[0])
+	_game, err := makeGame(DefaultReader, rs...)
+	if err != nil {
+		return err
 	}
 	printLogo(_game.logo)
 
@@ -77,6 +71,21 @@ func Loop() (board, bool, error) {
 }
 
 // Private
+
+// Factory
+func makeGame(r reader, rs ...reader) (*game, error) {
+	gam := newGame()
+	gam.setReader(r)
+
+	if len(rs) > 0 {
+		rs0 := rs[0]
+		if rs0 == nil {
+			return nil, errNilReader
+		}
+		gam.setReader(rs0)
+	}
+	return gam, nil
+}
 
 func (g *game) turn(plr player) bool {
 	c := g.inputLoop(plr)

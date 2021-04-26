@@ -134,8 +134,10 @@ func TestLoop(t *testing.T) {
 			false},
 	}
 
-	_ = Setup(reader) // NOTE: setting up is mandatory
-
+	err := Setup(reader) // NOTE: setting up is mandatory
+	if err != nil {
+		t.Errorf("Error = %v, want nil", err)
+	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, _ := Loop()
