@@ -1,0 +1,7 @@
+linters-settings:
+  govet:
+    check-shadowing: true
+
+linters:
+  enable:
+    - govet

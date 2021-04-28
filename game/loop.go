@@ -30,7 +30,8 @@ var _game *game
 // The param is a strategy for user input to be stubbed.
 // One can pass nothing, the default reader is used in the case.
 func Setup(rs ...reader) error {
-	_game, err := makeGame(DefaultReader, rs...)
+	var err error
+	_game, err = makeGame(DefaultReader, rs...)
 	if err != nil {
 		return err
 	}
