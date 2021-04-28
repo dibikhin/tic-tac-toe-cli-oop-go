@@ -4,6 +4,9 @@ import (
 	"strings"
 )
 
+// To rename less
+type Board = board
+
 type (
 	mark  = string // to avoid conversions
 	board [3][3]mark
