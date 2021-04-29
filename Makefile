@@ -6,7 +6,7 @@ all: clean test build
 
 test:
 	@echo "\nTesting..."
-	go test -v ./...
+	go test -v -coverpkg=./game ./game
 
 build:
 	@echo "\nBuilding..."

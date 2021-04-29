@@ -1,4 +1,4 @@
-package game_test
+package game
 
 import (
 	"fmt"
@@ -6,12 +6,18 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	game "tictactoe/game"
 )
 
-type Board = game.Board
+// Emulating importing the itself (self-importing is prohibited as "import cycle not allowed in test")
+type _Board = Board
 
+var (
+	_Setup = Setup
+	_Loop = Loop
+)
+
+// A blackbox test. It uses public (exported) members of the package only.
+// It's here to simplify coverage computation.
 func TestLoop(t *testing.T) {
 	// NOTE: intentionally kept dirty to lower maintenance
 
@@ -28,32 +34,32 @@ func TestLoop(t *testing.T) {
 	}
 	tests := []struct {
 		name  string
-		board Board
+		board _Board
 		more  bool
 	}{
 		{"O: 1, X: 2",
-			Board{
+			_Board{
 				{"O", "X", "_"},
 				{"_", "_", "_"},
 				{"_", "_", "_"},
 			},
 			true},
 		{"O: 3, X: 4",
-			Board{
+			_Board{
 				{"O", "X", "O"},
 				{"X", "_", "_"},
 				{"_", "_", "_"},
 			},
 			true},
 		{"O: 5, X: 6",
-			Board{
+			_Board{
 				{"O", "X", "O"},
 				{"X", "O", "X"},
 				{"_", "_", "_"},
 			},
 			true},
 		{"O: 7",
-			Board{
+			_Board{
 				{"O", "X", "O"},
 				{"X", "O", "X"},
 				{"O", "_", "_"},
@@ -61,13 +67,13 @@ func TestLoop(t *testing.T) {
 			false},
 	}
 
-	err := game.Setup(reader) // NOTE: setting up is mandatory
+	err := _Setup(reader) // NOTE: setting up is mandatory
 	if err != nil {
 		t.Errorf("Error = %v, want nil", err)
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, _ := game.Loop()
+			got, got1, _ := _Loop()
 			// assert.Equal is for verbose output
 			if !assert.Equal(t, tt.board, got) {
 				t.Errorf("Loop() got = %v, want %v", got, tt.board)

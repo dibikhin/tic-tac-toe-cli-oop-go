@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-// To rename less
+// Exported for tests
 type Board = board
 
 type (

@@ -8,16 +8,16 @@ import (
 func Test_board_isFilled(t *testing.T) {
 	tests := []struct {
 		name string
-		b    Board
+		b    board
 		args cell
 		want bool
 	}{
-		{"filled", Board{
+		{"filled", board{
 			{"X", "_", "X"},
 			{"O", "X", "O"},
 			{"X", "_", "O"},
 		}, cell{0, 0}, true},
-		{"empty", Board{
+		{"empty", board{
 			{"X", "_", "X"},
 			{"O", "_", "O"},
 			{"X", "_", "O"},
@@ -35,15 +35,15 @@ func Test_board_isFilled(t *testing.T) {
 func Test_board_hasEmpty(t *testing.T) {
 	tests := []struct {
 		name string
-		b    Board
+		b    board
 		want bool
 	}{
-		{"has empty", Board{
+		{"has empty", board{
 			{"X", "_", "X"},
 			{"O", "_", "O"},
 			{"X", "_", "O"},
 		}, true},
-		{"all filled", Board{
+		{"all filled", board{
 			{"X", "O", "X"},
 			{"O", "X", "O"},
 			{"O", "X", "O"},
@@ -61,26 +61,26 @@ func Test_board_hasEmpty(t *testing.T) {
 func Test_board_isWinner(t *testing.T) {
 	tests := []struct {
 		name string
-		b    Board
+		b    board
 		arg  string
 		want bool
 	}{
-		{"first row, X", Board{
+		{"first row, X", board{
 			{"X", "X", "X"},
 			{"O", "_", "_"},
 			{"O", "_", "_"},
 		}, "X", true},
-		{"last col, O", Board{
+		{"last col, O", board{
 			{"X", "X", "O"},
 			{"_", "_", "O"},
 			{"_", "_", "O"},
 		}, "O", true},
-		{"left diagonal, O", Board{
+		{"left diagonal, O", board{
 			{"X", "X", "O"},
 			{"_", "O", "_"},
 			{"O", "_", "_"},
 		}, "O", true},
-		{"draw", Board{
+		{"draw", board{
 			{"X", "O", "O"},
 			{"O", "X", "X"},
 			{"O", "X", "O"},
@@ -102,19 +102,19 @@ func Test_board_setCell(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		b    *Board
+		b    *board
 		args args
-		want *Board
+		want *board
 	}{
 		{
 			"1,1",
-			&Board{
+			&board{
 				{"_", "_", "_"},
 				{"_", "_", "_"},
 				{"_", "_", "_"},
 			},
 			args{key("5").toCell(), "X"},
-			&Board{
+			&board{
 				{"_", "_", "_"},
 				{"_", "X", "_"},
 				{"_", "_", "_"},
