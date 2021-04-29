@@ -1,4 +1,4 @@
-.PHONY: all test build start run clean
+.PHONY: all test lint run build start clean
 
 ttt = tictactoe.bin
 
@@ -8,6 +8,13 @@ test:
 	@echo "\nTesting..."
 	go test -v -coverpkg=./game ./game
 
+lint:
+	golangci-lint run -v
+
+run:
+	@echo "\nRunning..."
+	clear && go run main.go
+
 build:
 	@echo "\nBuilding..."
 	@go version
@@ -16,10 +23,6 @@ build:
 start: ${ttt}
 	@echo "\nStarting..."
 	./${ttt}
-
-run:
-	@echo "\nRunning..."
-	clear && go run main.go
 
 clean:
 	@echo "\nCleaning up..."
