@@ -8,12 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Emulating importing the itself (self-importing is prohibited as "import cycle not allowed in test")
+// Emulating importing the package itself (self-importing is prohibited as "import cycle not allowed in test")
 type _Board = Board
 
 var (
 	_Setup = Setup
-	_Loop = Loop
+	_Loop  = Loop
 )
 
 // A blackbox test. It uses public (exported) members of the package only.

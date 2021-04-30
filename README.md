@@ -6,25 +6,25 @@ A console 3x3 Tic-tac-toe for 2 friends.
 
 ## How to
 
-Get someone and play locally in your terminal using keyboard only. Cannot play w/ computer yet so can play with yourself at worst :)
+Get someone and play locally in your terminal using keyboard only. Cannot play w/ computer yet so can play with yourself at worst :) See how to run below.
 
 ## Getting Started
 
 ### Prerequisites
 - Install [Go](https://golang.org/doc/install) (tested on go1.15.7 linux/amd64)
+- Zero dependencies
 
 ### Installing
 Not needed, runs as is, just clone:
 ```
-$ cd my_projects
+$ cd my_projects/
 $ git clone https://github.com/dibikhin/tic-tac-toe-go.git
 ```
 
 ## Running the tests
 ```
-$ cd tic-tac-toe-go
-$ cd game/
-$ go test -v
+$ cd tic-tac-toe-go/
+$ make test
 ...
 >PASS
 >ok      tictactoe/game  0.010s
@@ -32,8 +32,8 @@ $ go test -v
 
 ## Running
 ```
-$ cd tic-tac-toe-go
-$ clear && go run main.go
+$ cd tic-tac-toe-go/
+$ make run
 > Hey! This is 3x3 Tic-tac-toe for 2 friends :)
 >
 > X   X
@@ -45,16 +45,23 @@ $ clear && go run main.go
 
 NOTE: Hit `ctrl+c` to exit.
 
+## Building & Starting
+```
+$ cd tic-tac-toe-go/
+$ make
+>Testing...
+>...
+>Building...
+>...
+$ make start
+```
+
 ## Internals
 
 ### Project Structure
 - `/game` — The game package
-- `|-board.go`
-- `|-game.go`
-- `|-key.go`
-- `|-loop.go`
-- `|-player.go`
 - `main.go` — Entry point
+- `Makefile`
 
 ### Overview
 - The UI is CLI
@@ -63,20 +70,21 @@ NOTE: Hit `ctrl+c` to exit.
 - Dirty input tolerant
 
 ### Technical
+- The code has excessive amount of comments for educational purposes
 - The game is one active app (no client/server)
   - Simple but structured
-  - Zero dependencies
+  - Zero deps
   - No patterns overkill
 - A basic DI is under the hood for auto-tests (naive, no too smart DI)
-  - a simple IoC in `main.go` — the `Read()` strategy
-  - an inner DI in the game loop (`loop.go`, not exposed for simplicity)
+  - a simple IoC in `bootstrap.go`, can stub/mock the user input strategy
+  - an inner DI in the game loop (game ctx in `loop.go`, not exposed for simplicity)
 - Well-tested
   - no mocks (behavior), just stubs (state)
   - ~90% code coverage
   - pure and atomic fns mainly (no IO tests)
   - NOTE: The tests play the game itself too. See in the end after expanding the `Test` section of [the Github Actions job 'build'](https://github.com/dibikhin/tic-tac-toe-go/runs/2290602609?check_suite_focus=true)
-- A lot of pure fns; IO extracted but not isolated
-
+- Paradigm: OOP + FP principles, SRP enforced
+- Functional programming: a lot of pure fns; IO extracted but not isolated
 
 ## Authors
 - [Roman Dibikhin](https://github.com/dibikhin)

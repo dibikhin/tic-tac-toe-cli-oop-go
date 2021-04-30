@@ -51,8 +51,6 @@ func (b board) hasEmpty() bool {
 
 // Pure
 func (b board) isWinner(m mark) bool {
-	// WARN: possible out of range
-
 	// Something better needed, too naive
 
 	// Horizontal

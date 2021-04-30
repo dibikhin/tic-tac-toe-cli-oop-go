@@ -71,9 +71,9 @@ func printLogo(s fmt.Stringer) {
 func (g game) chooseMarks() (player, player) {
 	fmt.Print("Press 'x' or 'o' to choose mark for Player 1: ")
 
-	// WARN: possible nil
+	// WARN: possible nil, ignored
 	mark1 := g.read()
-	p1, p2 := arrange(mark1)
+	p1, p2 := arrangePlayers(mark1)
 	return p1, p2
 }
 
@@ -89,7 +89,7 @@ func (g game) print() {
 // Other
 
 // Pure
-func arrange(m mark) (player, player) {
+func arrangePlayers(m mark) (player, player) {
 	if strings.ToLower(m) == "x" {
 		return player{"X", 1}, player{"O", 2}
 	}

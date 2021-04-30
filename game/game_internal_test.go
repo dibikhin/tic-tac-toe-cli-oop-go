@@ -22,7 +22,7 @@ func Test_arrange(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got1, got2 := arrange(tt.arg)
+			got1, got2 := arrangePlayers(tt.arg)
 			if got1 != tt.want1 {
 				t.Errorf("arrange() got = %v, want %v", got1, tt.want1)
 			}
