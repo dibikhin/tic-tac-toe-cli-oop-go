@@ -18,7 +18,8 @@ var (
 
 // Private package state.
 // It's here to simplify dependency injection.
-// There was no need to expose the private state as context
+// There was no need to expose the private state as context.
+// The changing part (board) is exposed only.
 var _game *game
 
 // Public
@@ -41,13 +42,13 @@ func Loop() (board, bool, error) {
 
 // Private
 
-func (g *game) turn(plr player) bool {
-	c := g.inputLoop(plr)
-	g.board.setCell(c, plr.mark)
+func (g *game) turn(playr player) bool {
+	c := g.inputLoop(playr)
+	g.board.setCell(c, playr.mark)
 	g.printBoard()
 
-	if g.board.isWinner(plr.mark) {
-		fmt.Printf("%v won!\n", plr)
+	if g.board.isWinner(playr.mark) {
+		fmt.Printf("%v won!\n", playr)
 		return false
 	}
 	if !g.board.hasEmpty() {

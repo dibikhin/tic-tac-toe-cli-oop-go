@@ -58,16 +58,16 @@ func DefaultReader() string {
 // Private
 
 // Factory
-func makeGame(r reader, rs ...reader) (*game, error) {
+func makeGame(def reader, rs ...reader) (*game, error) {
 	gam := newGame()
-	gam.setReader(r)
+	gam.setReader(def)
 
 	if len(rs) > 0 {
-		rs0 := rs[0]
-		if rs0 == nil {
+		fst := rs[0]
+		if fst == nil {
 			return nil, errNilReader
 		}
-		gam.setReader(rs0)
+		gam.setReader(fst)
 	}
 	return gam, nil
 }

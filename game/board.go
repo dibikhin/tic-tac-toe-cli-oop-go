@@ -28,6 +28,7 @@ func (b board) String() string {
 // `b` is a pointer because modifications are expected
 func (b *board) setCell(c cell, m mark) {
 	// WARN: possible nil
+	// WARN: possible out of range
 	b[c.row][c.col] = m
 }
 
