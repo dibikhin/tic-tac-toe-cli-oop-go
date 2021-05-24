@@ -1,4 +1,4 @@
-package game
+package internal
 
 import (
 	"fmt"
@@ -41,9 +41,9 @@ func newGame() *game {
 // Pure
 func (g game) isReady() bool {
 	return g.read != nil &&
-		g.player1 != player{} &&
-		g.player2 != player{} &&
-		g.board != board{}
+		!g.player1.isEmpty() &&
+		!g.player2.isEmpty() &&
+		!g.board.isEmpty()
 }
 
 func (g *game) setReader(read reader) {

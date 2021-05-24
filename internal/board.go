@@ -1,4 +1,4 @@
-package game
+package internal
 
 import (
 	"strings"
@@ -21,6 +21,15 @@ func (b board) String() string {
 		dump = append(dump, s)
 	}
 	return strings.Join(dump, "\n")
+}
+
+func (b board) isEmpty() bool {
+	return b == board{} ||
+		// TODO magic constants
+		len(b) != 3 ||
+		len(b[0]) != 3 ||
+		len(b[1]) != 3 ||
+		len(b[2]) != 3
 }
 
 // Private

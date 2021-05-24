@@ -1,4 +1,4 @@
-package game
+package internal
 
 import "fmt"
 
@@ -9,6 +9,10 @@ type player struct {
 
 func (p player) String() string {
 	return fmt.Sprintf(`Player %v ("%v")`, p.num, p.mark)
+}
+
+func (p player) isEmpty() bool {
+	return p == player{}
 }
 
 // IO

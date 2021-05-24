@@ -1,6 +1,6 @@
-// Package game implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet).
+// Package internal implements 3x3 Tic-tac-toe for 2 friends (cannot play with computer yet).
 // Players choose their marks, put them, the game checks winner or draw.
-package game
+package internal
 
 import (
 	"errors"
