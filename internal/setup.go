@@ -2,19 +2,27 @@ package internal
 
 import (
 	"bufio"
+	"errors"
 	"os"
 	"strings"
+)
+
+// Constants, Private
+var (
+	// errNilReader arises when `Setup()` is run with nil reader.
+	errNilReader = errors.New("game: the reader is nil, pass a non-nil reader or nothing for the default one")
 )
 
 // Setup initializes the game and helps players to choose marks.
 // The param is a strategy for user input to be stubbed.
 // One can pass nothing, the default reader is used in the case.
 func Setup(rs ...reader) error {
-	var err error
-	_game, err = makeGame(DefaultReader, rs...)
+	alt, err := extractReader(rs)
 	if err != nil {
 		return err
 	}
+	_game = makeGame(DefaultReader, alt)
+
 	printLogo(_game.logo)
 
 	_game.setPlayers(_game.chooseMarks())
@@ -36,18 +44,23 @@ func DefaultReader() string {
 }
 
 // Private
+func extractReader(rs []reader) (reader, error) {
+	if len(rs) < 1 {
+		return nil, nil
+	}
+	alt := rs[0]
+	if alt == nil {
+		return nil, errNilReader
+	}
+	return alt, nil
+}
 
 // Factory
-func makeGame(def reader, rs ...reader) (*game, error) {
+func makeGame(def, alt reader) *game {
 	gam := newGame()
-	gam.setReader(def)
-
-	if len(rs) > 0 {
-		fst := rs[0]
-		if fst == nil {
-			return nil, errNilReader
-		}
-		gam.setReader(fst)
+	if alt != nil {
+		gam.setReader(alt)
 	}
-	return gam, nil
+	gam.setReader(def)
+	return gam
 }

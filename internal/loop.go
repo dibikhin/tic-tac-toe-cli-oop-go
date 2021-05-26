@@ -11,9 +11,6 @@ import (
 var (
 	// errCouldNotStart arises when `Loop()` is run without running `Setup()` first.
 	errCouldNotStart = errors.New("game: couldn't start the game loop, set up the game first")
-
-	// errNilReader arises when `Setup()` is run with nil reader.
-	errNilReader = errors.New("game: the reader is nil, pass a non-nil reader or nothing for the default one")
 )
 
 // Private package state.
@@ -30,7 +27,7 @@ var _game *game
 // The `board` is returned for tests only.
 func Loop() (board, bool, error) {
 	if _game == nil || !_game.isReady() {
-		return board{}, false, errCouldNotStart
+		return _deadBoard, false, errCouldNotStart
 	}
 	more := _game.turn(_game.player1)
 	if !more {

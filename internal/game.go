@@ -27,14 +27,10 @@ type game struct {
 // Pure
 func newGame() *game {
 	return &game{
-		logo: board{
-			{"X", " ", "X"},
-			{"O", "X", "O"},
-			{"X", " ", "O"}},
-		board: board{
-			{_blank, _blank, _blank},
-			{_blank, _blank, _blank},
-			{_blank, _blank, _blank}},
+		logo:  _logo,
+		board: _blankBoard,
+
+		// others are omitted for flexibility
 	}
 }
 
