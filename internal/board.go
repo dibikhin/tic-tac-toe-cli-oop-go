@@ -15,7 +15,7 @@ type (
 
 const (
 	_gap = "_"
-	x_X    = "x_X"
+	x_X  = "x_X"
 )
 
 var (
@@ -56,7 +56,7 @@ func (b *board) setCell(c cell, m mark) {
 // Pure
 func (b board) isEmpty() bool {
 	return b == board{} ||
-		b == _blankBoard ||
+		b == _deadBoard ||
 
 		// TODO: magic constants
 		len(b) != 3 ||

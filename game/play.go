@@ -1,3 +1,5 @@
+// Package game is a bootstrapper only. It shows how to properly set up and run the game.
+// See implementation in the internal package.
 package game
 
 import (

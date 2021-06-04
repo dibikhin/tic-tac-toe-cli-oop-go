@@ -60,6 +60,7 @@ func makeGame(def, alt reader) *game {
 	gam := newGame()
 	if alt != nil {
 		gam.setReader(alt)
+		return gam
 	}
 	gam.setReader(def)
 	return gam
