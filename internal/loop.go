@@ -23,9 +23,11 @@ var _game *game
 
 // Game Loop()
 
+type again = bool
+
 // Loop prompts players to take turns.
 // The `board` is returned for tests only.
-func Loop() (board, bool, error) {
+func Loop() (board, again, error) {
 	if _game == nil || !_game.isReady() {
 		return _deadBoard, false, errCouldNotStart
 	}

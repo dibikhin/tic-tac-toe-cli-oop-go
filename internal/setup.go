@@ -45,14 +45,14 @@ func DefaultReader() string {
 
 // Private
 func extractReader(rs []reader) (reader, error) {
-	if len(rs) < 1 {
+	switch {
+	case len(rs) < 1:
 		return nil, nil
-	}
-	alt := rs[0]
-	if alt == nil {
+	case rs[0] == nil:
 		return nil, errNilReader
+	default:
+		return rs[0], nil
 	}
-	return alt, nil
 }
 
 // Factory

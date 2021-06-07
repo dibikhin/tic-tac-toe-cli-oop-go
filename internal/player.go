@@ -23,7 +23,7 @@ func prompt(s fmt.Stringer) {
 }
 
 func (g game) printBoard() {
-	// Explicit check for fmt.Stringer
+	// Explicit check for the interface
 	var _ fmt.Stringer = g.board
 
 	fmt.Println()

@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-type Board = board // Exported for tests
+type Board = board // Exported for tests (tricky)
 
 type (
 	mark  = string // to avoid conversions
@@ -14,7 +14,7 @@ type (
 // Constants, Private
 
 const (
-	_gap = "_"
+	__ = "_"
 	x_X  = "x_X"
 )
 
@@ -24,9 +24,9 @@ var (
 		{"O", "X", "O"},
 		{"X", " ", "O"}}
 	_blankBoard = board{
-		{_gap, _gap, _gap},
-		{_gap, _gap, _gap},
-		{_gap, _gap, _gap}}
+		{__, __, __},
+		{__, __, __},
+		{__, __, __}}
 	_deadBoard = board{
 		{x_X, x_X, x_X},
 		{x_X, x_X, x_X},
@@ -68,14 +68,14 @@ func (b board) isEmpty() bool {
 // Pure
 func (b board) isFilled(c cell) bool {
 	// WARN: possible out of range
-	return b[c.row][c.col] != _gap
+	return b[c.row][c.col] != __
 }
 
 // Pure
 func (b board) hasEmpty() bool {
 	for _, row := range b {
 		for _, m := range row {
-			if m == _gap {
+			if m == __ {
 				return true
 			}
 		}

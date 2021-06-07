@@ -30,6 +30,8 @@ $ make test
 >ok      tictactoe/game  0.010s
 ```
 
+NOTE: The tests play the game itself too, scroll to see.
+
 ## Running
 ```
 $ cd tic-tac-toe-go/
@@ -60,6 +62,7 @@ $ make start
 
 ### Project Structure
 - `/game` — The game package
+- `go.mod`
 - `main.go` — Entry point
 - `Makefile`
 
