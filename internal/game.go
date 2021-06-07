@@ -24,6 +24,19 @@ type game struct {
 	read reader
 }
 
+// Constants
+
+var _deadGame = &game{board: _deadBoard}
+
+// Public
+
+// Pure
+func (g game) Board() board {
+	return g.board
+}
+
+// Private
+
 // Pure
 func newGame() *game {
 	return &game{

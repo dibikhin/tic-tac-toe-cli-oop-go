@@ -16,19 +16,25 @@ var (
 // Setup initializes the game and helps players to choose marks.
 // The param is a strategy for user input to be stubbed.
 // One can pass nothing, the default reader is used in the case.
-func Setup(rs ...reader) error {
+// Example:
+// ctx, err := Setup()
+// OR
+// ctx, err := Setup(DefaultReader)
+// OR
+// ctx, err := Setup(yourReaderFunc)
+func Setup(rs ...reader) (*game, error) {
 	alt, err := extractReader(rs)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	_game = makeGame(DefaultReader, alt)
+	gam := makeGame(DefaultReader, alt)
 
-	printLogo(_game.logo)
+	printLogo(gam.logo)
 
-	_game.setPlayers(_game.chooseMarks())
-	_game.print()
+	gam.setPlayers(gam.chooseMarks())
+	gam.print()
 
-	return nil
+	return gam, nil
 }
 
 // DefaultReader gets player's input and returns it as a text.
@@ -44,6 +50,7 @@ func DefaultReader() string {
 }
 
 // Private
+
 func extractReader(rs []reader) (reader, error) {
 	switch {
 	case len(rs) < 1:

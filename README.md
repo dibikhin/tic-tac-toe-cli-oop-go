@@ -79,8 +79,8 @@ $ make start
   - Zero deps
   - No patterns overkill
 - A basic DI is under the hood for auto-tests (naive, no too smart DI)
-  - a simple IoC in `bootstrap.go`, can stub/mock the user input strategy
-  - an inner DI in the game loop (game ctx in `loop.go`, not exposed for simplicity)
+  - a simple IoC in `setup.go`, can stub/mock the user input strategy
+  - an inner DI in the game loop (game ctx in `loop.go`)
 - Well-tested
   - no mocks (behavior), just stubs (state)
   - ~90% code coverage

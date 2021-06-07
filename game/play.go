@@ -12,13 +12,13 @@ import (
 // It's a default bootstrapper.
 // Other public functions are exposed for testing purposes.
 func Play() error {
-	err := Setup()
+	ctx, err := Setup()
 	if err != nil {
 		return err
 	}
 	more := true
 	for more {
-		_, more, err = Loop()
+		_, more, err = Loop(ctx)
 		if err != nil {
 			return err
 		}

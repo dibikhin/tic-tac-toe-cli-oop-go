@@ -13,12 +13,6 @@ var (
 	errCouldNotStart = errors.New("game: couldn't start the game loop, set up the game first")
 )
 
-// Private package state.
-// It's here to simplify dependency injection.
-// There was no need to expose the private state as context.
-// The changing part (board) is exposed only.
-var _game *game
-
 // Public
 
 // Game Loop()
@@ -27,16 +21,16 @@ type again = bool
 
 // Loop prompts players to take turns.
 // The `board` is returned for tests only.
-func Loop() (board, again, error) {
-	if _game == nil || !_game.isReady() {
-		return _deadBoard, false, errCouldNotStart
+func Loop(gam *game) (*game, again, error) {
+	if gam == nil || !gam.isReady() {
+		return _deadGame, false, errCouldNotStart
 	}
-	more := _game.turn(_game.player1)
+	more := gam.turn(gam.player1)
 	if !more {
-		return _game.board, false, nil
+		return gam, false, nil
 	}
-	more = _game.turn(_game.player2)
-	return _game.board, more, nil
+	more = gam.turn(gam.player2)
+	return gam, more, nil
 }
 
 // Private

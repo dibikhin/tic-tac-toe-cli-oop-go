@@ -9,7 +9,7 @@ import (
 )
 
 // Emulating importing the package itself (self-importing is prohibited as "import cycle not allowed in test")
-type _Board = Board
+type _Board = board
 
 var (
 	_Setup = Setup
@@ -21,7 +21,7 @@ var (
 func TestLoop(t *testing.T) {
 	// NOTE: intentionally kept dirty to lower maintenance
 
-	// WARN: editing this can hang up this test
+	// WARN: editing this can HANG UP this test!
 	c := -2
 	// -2 is ignored;
 	// -1 is for testing wrong input;
@@ -67,19 +67,19 @@ func TestLoop(t *testing.T) {
 			false},
 	}
 
-	err := _Setup(reader) // NOTE: setting up is mandatory
+	gam, err := _Setup(reader) // NOTE: setting up is mandatory
 	if err != nil {
 		t.Errorf("Error = %v, want nil", err)
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, _ := _Loop()
-			// assert.Equal is for verbose output
-			if !assert.Equal(t, tt.board, got) {
-				t.Errorf("Loop() got = %v, want %v", got, tt.board)
+			gotCtx, gotMore, _ := _Loop(gam)
+			// assert.Equal is for a verbose output
+			if !assert.Equal(t, tt.board, gotCtx.Board()) {
+				t.Errorf("Loop() got = %v, want %v", gotCtx.Board(), tt.board)
 			}
-			if got1 != tt.more {
-				t.Errorf("Loop() got1 = %v, want %v", got1, tt.more)
+			if gotMore != tt.more {
+				t.Errorf("Loop() got1 = %v, want %v", gotMore, tt.more)
 			}
 		})
 	}

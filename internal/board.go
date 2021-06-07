@@ -4,8 +4,6 @@ import (
 	"strings"
 )
 
-type Board = board // Exported for tests (tricky)
-
 type (
 	mark  = string // to avoid conversions
 	board [3][3]mark
@@ -14,8 +12,8 @@ type (
 // Constants, Private
 
 const (
-	__ = "_"
-	x_X  = "x_X"
+	__  = "_"
+	x_X = "x_X"
 )
 
 var (
