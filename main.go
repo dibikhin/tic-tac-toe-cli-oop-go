@@ -1,28 +1,21 @@
-// Tic-tac-toe inspired by 'A Tour of Go'
+// Tic-tac-toe inspired by 'A Tour of Go'.
 package main
 
 import (
 	"fmt"
 	"os"
 
-	game "tictactoe/game"
+	"tictactoe/game"
 )
 
 // $ clear && go run main.go
 func main() {
 	fmt.Println("Hey! This is 3x3 Tic-tac-toe for 2 friends :)")
 
-	err := game.Setup(game.Read)
+	err := game.Play()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v.\n", err)
 		os.Exit(1)
 	}
-	_, more, err := game.Loop()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v.\n", err)
-		os.Exit(1)
-	}
-	for more {
-		_, more, _ = game.Loop()
-	}
+	fmt.Println("Bye!")
 }

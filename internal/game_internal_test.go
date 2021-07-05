@@ -1,10 +1,7 @@
-package game
+package internal
 
 import (
-	"strconv"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func Test_arrange(t *testing.T) {
@@ -25,7 +22,7 @@ func Test_arrange(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got1, got2 := arrange(tt.arg)
+			got1, got2 := arrangePlayers(tt.arg)
 			if got1 != tt.want1 {
 				t.Errorf("arrange() got = %v, want %v", got1, tt.want1)
 			}
@@ -79,66 +76,6 @@ func Test_toCell(t *testing.T) {
 			}
 			if c.col != tt.want1 {
 				t.Errorf("pos() got1 = %v, want %v", c.col, tt.want1)
-			}
-		})
-	}
-}
-
-func TestLoop(t *testing.T) {
-	// NOTE: intentionally kept dirty to lower maintenance
-
-	c := -2 // WARN: editing this can hang up this test
-	// -2 is ignored; -1 is for testing wrong input; 0 is for choosing player; 1..7 are for players turns
-	reader := func() string {
-		c++
-		return strconv.Itoa(c)
-	}
-	tests := []struct {
-		name  string
-		board board
-		more  bool
-	}{
-		{"O: 1, X: 2",
-			board{
-				{"O", "X", "_"},
-				{"_", "_", "_"},
-				{"_", "_", "_"},
-			},
-			true},
-		{"O: 3, X: 4",
-			board{
-				{"O", "X", "O"},
-				{"X", "_", "_"},
-				{"_", "_", "_"},
-			},
-			true},
-		{"O: 5, X: 6",
-			board{
-				{"O", "X", "O"},
-				{"X", "O", "X"},
-				{"_", "_", "_"},
-			},
-			true},
-		{"O: 7",
-			board{
-				{"O", "X", "O"},
-				{"X", "O", "X"},
-				{"O", "_", "_"},
-			},
-			false},
-	}
-
-	Setup(reader) // NOTE: setting up is mandatory
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1, _ := Loop()
-			// assert.Equal is for verbose output
-			if !assert.Equal(t, tt.board, got) {
-				t.Errorf("Loop() got = %v, want %v", got, tt.board)
-			}
-			if got1 != tt.more {
-				t.Errorf("Loop() got1 = %v, want %v", got1, tt.more)
 			}
 		})
 	}
