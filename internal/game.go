@@ -5,13 +5,6 @@ import (
 	"strings"
 )
 
-// User input strategy for stubbing in tests.
-//
-// NOTE: An interface is more idiomatic in this case. BUT it's overkill to define
-// a type with constructor, an interface and its fake implementation in tests vs. this
-// func, its impl and its fake impl in tests.
-type reader func() string
-
 // Game
 
 type game struct {

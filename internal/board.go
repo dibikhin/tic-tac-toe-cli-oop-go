@@ -6,14 +6,15 @@ import (
 
 type (
 	mark  = string // to avoid conversions
-	board [3][3]mark
+	board [_size][_size]mark
 )
 
 // Constants, Private
 
 const (
-	__  = "_"
-	x_X = "x_X"
+	__    = "□"
+	x_X   = "x_X"
+	_size = 3
 )
 
 var (
@@ -56,11 +57,10 @@ func (b board) isEmpty() bool {
 	return b == board{} ||
 		b == _deadBoard ||
 
-		// TODO: magic constants
-		len(b) != 3 ||
-		len(b[0]) != 3 ||
-		len(b[1]) != 3 ||
-		len(b[2]) != 3
+		len(b) != _size ||
+		len(b[0]) != _size ||
+		len(b[1]) != _size ||
+		len(b[2]) != _size
 }
 
 // Pure

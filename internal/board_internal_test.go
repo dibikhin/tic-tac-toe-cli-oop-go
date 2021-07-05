@@ -13,14 +13,14 @@ func Test_board_isFilled(t *testing.T) {
 		want bool
 	}{
 		{"filled", board{
-			{"X", "_", "X"},
+			{"X", __, "X"},
 			{"O", "X", "O"},
-			{"X", "_", "O"},
+			{"X", __, "O"},
 		}, cell{0, 0}, true},
 		{"empty", board{
-			{"X", "_", "X"},
-			{"O", "_", "O"},
-			{"X", "_", "O"},
+			{"X", __, "X"},
+			{"O", __, "O"},
+			{"X", __, "O"},
 		}, cell{0, 1}, false},
 	}
 	for _, tt := range tests {
@@ -39,9 +39,9 @@ func Test_board_hasEmpty(t *testing.T) {
 		want bool
 	}{
 		{"has empty", board{
-			{"X", "_", "X"},
-			{"O", "_", "O"},
-			{"X", "_", "O"},
+			{"X", __, "X"},
+			{"O", __, "O"},
+			{"X", __, "O"},
 		}, true},
 		{"all filled", board{
 			{"X", "O", "X"},
@@ -67,18 +67,18 @@ func Test_board_isWinner(t *testing.T) {
 	}{
 		{"first row, X", board{
 			{"X", "X", "X"},
-			{"O", "_", "_"},
-			{"O", "_", "_"},
+			{"O", __, __},
+			{"O", __, __},
 		}, "X", true},
 		{"last col, O", board{
 			{"X", "X", "O"},
-			{"_", "_", "O"},
-			{"_", "_", "O"},
+			{__, __, "O"},
+			{__, __, "O"},
 		}, "O", true},
 		{"left diagonal, O", board{
 			{"X", "X", "O"},
-			{"_", "O", "_"},
-			{"O", "_", "_"},
+			{__, "O", __},
+			{"O", __, __},
 		}, "O", true},
 		{"draw", board{
 			{"X", "O", "O"},
@@ -109,15 +109,15 @@ func Test_board_setCell(t *testing.T) {
 		{
 			"1,1",
 			&board{
-				{"_", "_", "_"},
-				{"_", "_", "_"},
-				{"_", "_", "_"},
+				{__, __, __},
+				{__, __, __},
+				{__, __, __},
 			},
 			args{key("5").toCell(), "X"},
 			&board{
-				{"_", "_", "_"},
-				{"_", "X", "_"},
-				{"_", "_", "_"},
+				{__, __, __},
+				{__, "X", __},
+				{__, __, __},
 			},
 		},
 	}
