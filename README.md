@@ -1,8 +1,8 @@
 # Tic-tac-toe
 
-A console 3x3 Tic-tac-toe for 2 friends.
+A console 3x3 Tic-tac-toe for 2 friends (an OOP version).
 
-[![GoReportCard example](https://goreportcard.com/badge/github.com/dibikhin/tic-tac-toe-go)](https://goreportcard.com/report/github.com/dibikhin/tic-tac-toe-go) [![Maintainability](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/maintainability)](https://codeclimate.com/github/dibikhin/tic-tac-toe-go/maintainability) [![example branch parameter](https://github.com/dibikhin/tic-tac-toe-go/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/dibikhin/tic-tac-toe-go/actions/workflows/go.yml)
+[![GoReportCard example](https://goreportcard.com/badge/github.com/dibikhin/tic-tac-toe-cli-oop-go)](https://goreportcard.com/report/github.com/dibikhin/tic-tac-toe-cli-oop-go) [![Maintainability](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/maintainability)](https://codeclimate.com/github/dibikhin/tic-tac-toe-cli-oop-go/maintainability) [![example branch parameter](https://github.com/dibikhin/tic-tac-toe-cli-oop-go/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/dibikhin/tic-tac-toe-cli-oop-go/actions/workflows/go.yml)
 
 ## How to
 
@@ -18,12 +18,12 @@ Get someone and play locally in your terminal using keyboard only. Cannot play w
 Not needed, runs as is, just clone:
 ```
 $ cd my_projects/
-$ git clone https://github.com/dibikhin/tic-tac-toe-go.git
+$ git clone https://github.com/dibikhin/tic-tac-toe-cli-oop-go.git
 ```
 
 ## Running the tests
 ```
-$ cd tic-tac-toe-go/
+$ cd tic-tac-toe-cli-oop-go/
 $ make test
 ...
 >PASS
@@ -34,7 +34,7 @@ NOTE: The tests play the game itself too, scroll to see.
 
 ## Running
 ```
-$ cd tic-tac-toe-go/
+$ cd tic-tac-toe-cli-oop-go/
 $ make run
 > Hey! This is 3x3 Tic-tac-toe for 2 friends :)
 >
@@ -49,7 +49,7 @@ NOTE: Hit `ctrl+c` to exit.
 
 ## Building & Starting
 ```
-$ cd tic-tac-toe-go/
+$ cd tic-tac-toe-cli-oop-go/
 $ make
 >Testing...
 >...
@@ -85,7 +85,7 @@ $ make start
   - no mocks (behavior), just stubs (state)
   - ~90% code coverage
   - pure and atomic fns mainly (no IO tests)
-  - NOTE: The tests play the game itself too. See in the end after expanding the `Test` section of [the Github Actions job 'build'](https://github.com/dibikhin/tic-tac-toe-go/runs/2290602609?check_suite_focus=true)
+  - NOTE: The tests play the game itself too. See in the end after expanding the `Test` section of [the Github Actions job 'build'](https://github.com/dibikhin/tic-tac-toe-cli-oop-go/runs/2290602609?check_suite_focus=true)
 - Paradigm: OOP + FP principles, SRP enforced
 - Functional programming: a lot of pure fns; IO extracted but not isolated
 
