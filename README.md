@@ -1,6 +1,6 @@
-# Tic-tac-toe
+# Tic-tac-toe CLI OOP Go
 
-A console 3x3 Tic-tac-toe for 2 friends (an OOP version).
+A console 3x3 Tic-tac-toe for 2 friends on Go, in terminal, using OOP.
 
 [![GoReportCard example](https://goreportcard.com/badge/github.com/dibikhin/tic-tac-toe-cli-oop-go)](https://goreportcard.com/report/github.com/dibikhin/tic-tac-toe-cli-oop-go) [![Maintainability](https://api.codeclimate.com/v1/badges/229dc45729c3983e99a9/maintainability)](https://codeclimate.com/github/dibikhin/tic-tac-toe-cli-oop-go/maintainability) [![example branch parameter](https://github.com/dibikhin/tic-tac-toe-cli-oop-go/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/dibikhin/tic-tac-toe-cli-oop-go/actions/workflows/go.yml)
 
